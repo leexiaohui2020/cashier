@@ -8,17 +8,24 @@ class UserService extends Service {
    * @param {String} opts.username - 用户名
    * @param {String} opts.password - 密码
    * @param {String} opts.email - 邮箱
+   * @param {String} opts.code - 验证码
    */
   async regist(opts = {}) {
-    const { username, password, email } = opts
-    const { validate, model, sendMail } = this.app
+    const { username, password, email, code } = opts
+    const { validate, model } = this.app
+    const { ctx } = this
 
     if (
       !validate.isString(username) ||
       !validate.isString(password) ||
-      !validate.isString(email)
+      !validate.isString(email) ||
+      !validate.isString(code)
     ) {
       return new Error('参数错误')
+    }
+
+    if (ctx.session.code !== code) {
+      return new Error('验证码错误')
     }
 
     if (!validate.validAccount(username)) {
@@ -42,52 +49,33 @@ class UserService extends Service {
       email,
       username,
       password,
-      createdTime: new Date()
-    })
-
-    await sendMail(email, '激活邮箱', 'active-email', {
-      email,
-      href: ''
+      createdTime: new Date(),
+      activeTime: new Date()
     })
   }
 
   /**
-   * 激活邮箱
-   * @param {Object} opts 
-   * @param {String} opts._id - 用户id
-   * @param {String} opts.username - 用户名
+   * 获取邮箱验证码
+   * @param {Object} opts
    * @param {String} opts.email - 邮箱
-   * @param {String} opts.sign - 校验签名
    */
-  async activeEmail(opts = {}) {
-    const { _id, username, email, sign } = opts
-    const { validate, createSign, model } = this.app
+  async getCode(opts = {}) {
+    const { email } = opts
+    const { ctx, app } = this
+    const { validate, sendMail } = app
 
-    if (
-      !validate.isString(_id) ||
-      !validate.isString(username) ||
-      !validate.isString(email) ||
-      !validate.isString(sign)
-    ) {
+    if (!validate.isString(email)) {
       return new Error('参数错误')
     }
-
-    if (createSign({ _id, username, email }) !== sign) {
-      return new Error('校验错误')
+    if (!validate.isEmail(email)) {
+      return new Error('请填写正确的邮箱')
     }
 
-    const user = await model.User.findOne({ _id, email, username })
-    if (!user) {
-      return new Error('用户尚未注册')
-    }
-    if (user.activeTime) {
-      return new Error('邮箱已经激活过了')
-    }
-
-    await user.updateOne({
-      $set: {
-        activeTime: new Date()
-      }
+    const code = String(Math.random()).substr(2, 6)
+    ctx.session.code = code
+    await sendMail(email, '[易收银] 请查收您的验证码', 'validcode', {
+      code,
+      email
     })
   }
 }

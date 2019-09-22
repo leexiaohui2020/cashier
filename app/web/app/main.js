@@ -6,8 +6,10 @@ import createRouter from './router'
 import VueLazyLoad from 'vue-lazyload'
 import Loading from './utils/loading'
 import Dialog from './utils/dialog'
+import Validate from './utils/validate'
 import iView from 'iview'
 import VueClipboards from 'vue-clipboards'
+import * as api from './api/main'
 import 'web/component'
 import 'common/style/base.less'
 import './main.less'
@@ -17,6 +19,9 @@ Vue.use(Loading)
 Vue.use(VueLazyLoad)
 Vue.use(Dialog)
 Vue.use(VueClipboards)
+Vue.use(Validate)
+
+Vue.prototype.$api = api
 
 export default new App({
   index,
