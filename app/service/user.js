@@ -55,16 +55,66 @@ class UserService extends Service {
   }
 
   /**
+   * 会员登录
+   * @param {Object} opts
+   * @param {String} opts.account - 用户名/邮箱
+   * @param {String} opts.password - 密码
+   * @param {String} opts.code - 验证码
+   */
+  async login(opts = {}) {
+    const { account, password, code } = opts
+    const { ctx, app } = this
+    const { validate, model } = app
+
+    if (
+      !validate.isString(account) ||
+      !validate.isString(password) ||
+      !validate.isString(code)
+    ) {
+      return new Error('参数错误')
+    }
+
+    if (ctx.session.code !== code) {
+      return new Error('验证码错误')
+    }
+
+    const user = await model.User.findOne({}).or([
+      { username: account },
+      { email: account }
+    ])
+    if (!user) {
+      return new Error('用户尚未注册')
+    }
+    if (user.password !== password) {
+      return new Error('密码错误')
+    }
+
+    const uid = user._id
+    const { username, email, createdTime, activeTime } = user
+    const data = ctx.session['store/user'] = {
+      uid,
+      userInfo: {
+        username,
+        email,
+        createdTime,
+        activeTime
+      }
+    }
+    return data
+  }
+
+  /**
    * 获取邮箱验证码
    * @param {Object} opts
    * @param {String} opts.email - 邮箱
+   * @param {String} opts.body - 场景描述
    */
   async getCode(opts = {}) {
-    const { email } = opts
+    const { email, body } = opts
     const { ctx, app } = this
     const { validate, sendMail } = app
 
-    if (!validate.isString(email)) {
+    if (!validate.isString(email) || !validate.isString(body)) {
       return new Error('参数错误')
     }
     if (!validate.isEmail(email)) {
@@ -75,8 +125,29 @@ class UserService extends Service {
     ctx.session.code = code
     await sendMail(email, '[易收银] 请查收您的验证码', 'validcode', {
       code,
-      email
+      email,
+      body
     })
+  }
+
+  /**
+   * 发送验证码2
+   * @param {Object} opts
+   * @param {String} opts.account - 可以是用户名或邮箱
+   * @param {String} opts.body - 场景描述
+   */
+  async getCodeByAccount(opts = {}) {
+    const { account, body } = opts
+    const { model } = this.app
+    const user = await model.User.findOne({}).or([
+      { username: account },
+      { email: account }
+    ])
+    if (!user) {
+      return new Error('用户尚未注册')
+    }
+    const { email } = user
+    return await this.getCode({ email, body })
   }
 }
 

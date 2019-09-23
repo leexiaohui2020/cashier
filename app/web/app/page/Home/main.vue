@@ -4,9 +4,12 @@
 
 <script>
 export default {
-  name: 'LeeHome',
+  name: 'PageHome',
   installRouter(router) {
-    router.regist('home', '/', this)
+    router.regist('home', '/', this, {
+      auth: true,
+      title: '首页'
+    })
   }
 }
 </script>

@@ -4,15 +4,20 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 const files = require.context('./modules', false, /\.js$/);
-const modules = files.keys().reduce((map, key) => {
-    const part = files(key).default;
-    const name = part.name || key.match(/\.\/(\S*)\.js/)[1];
-    part.namespaced = true;
-    map[name] = part;
-    return map;
-}, {});
 
 export default function createStore(initState = {}) {
+
+    const modules = files.keys().reduce((map, key) => {
+        let part = files(key).default;
+        if (typeof part === 'function') {
+            part = part(initState)
+        }
+        let name = part.name || key.match(/\.\/(\S*)\.js/)[1];
+        part.namespaced = true;
+        map[name] = part;
+        return map;
+    }, {});
+
     const store = new Vuex.Store({
         state: { ...initState },
         modules,

@@ -5,7 +5,8 @@ class AppController extends Controller {
   async index() {
     const { ctx } = this
     const { url } = ctx
-    await ctx.render('app.js', { ctx, url })
+    const session = ctx.session
+    await ctx.render('app.js', { ctx, url, session })
   }
 }
 

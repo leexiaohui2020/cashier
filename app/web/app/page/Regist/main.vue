@@ -127,7 +127,8 @@ export default {
         return this.$Message.error('请填写格式正确的邮箱')
       }
       this.startCodeBuffer()
-      const { data } = await this.$api.getCode({ email })
+      const body = '注册易收银平台会员账号'
+      const { data } = await this.$api.getCode({ email, body })
       if (data.status !== this.$api.ERR_OK) {
         return this.$Message.error(data.errmsg)
       }
