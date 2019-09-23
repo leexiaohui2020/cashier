@@ -19,6 +19,17 @@ class InstanceApiController extends Controller {
       ctx.body = { status: 'ok' }
     }
   }
+
+  /** 查询实例列表 */
+  async lst() {
+    const { ctx } = this
+    const data = await ctx.service.instance.lst(ctx.request.body)
+    if (data instanceof Error) {
+      ctx.body = { status: 'err', errmsg: data.message }
+    } else {
+      ctx.body = { status: 'ok', data }
+    }
+  }
 }
 
 module.exports = InstanceApiController

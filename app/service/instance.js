@@ -1,4 +1,5 @@
 const Service = require('egg').Service
+const moment = require('moment')
 
 class InstanceService extends Service {
 
@@ -71,6 +72,39 @@ class InstanceService extends Service {
     dataObj.instanceSecret = createSign(dataObj)
 
     await model.Instance.create(dataObj)
+  }
+
+  /**
+   * 实例列表
+   * @param {Object} opts
+   * @param {String} opts.uid - 用户id
+   * @param {Object} opts.pager - 分页器
+   * @param {Number} opts.pager.page - 分页
+   * @param {Number} opts.pager.pagesize - 条数
+   */
+  async lst(opts = {}) {
+    const { uid, pager = {} } = opts
+    const { page = 1, pagesize = 10 } = pager
+    const { model } = this.app
+    
+    const total = await model.Instance.countDocuments({ userId: uid })
+    const source = await model.Instance.find({ userId: uid }).skip((page - 1) * pagesize).limit(pagesize).sort({ createdTime: -1 })
+    const list = source.map(item => ({
+      id: item._id,
+      name: item.name,
+      description: item.description,
+      limit: item.limit,
+      limitText: `每日订单上限：${item.limit ? `${item.limit}笔` : '无限制' }`,
+      callbackEmail: item.callbackEmail,
+      callbackUrl: item.callbackUrl,
+      createdTime: moment(item.createdTime).format('YYYY-MM-DD HH:mm'),
+      expireTime: moment(item.expireTime).format('YYYY-MM-DD HH:mm'),
+      expireText: `过期时间：${moment(item.expireTime).diff(new Date(), 'day')}天后`,
+      status: item.status,
+      statusText: [ '正常', '停用' ][item.status],
+      statusColor: [ 'success', 'error' ][item.status]
+    }))
+    return { page, pagesize, total, list }
   }
 }
 

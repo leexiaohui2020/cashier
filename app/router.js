@@ -8,5 +8,6 @@ module.exports = app => {
 
   router.post('/api/instance/getPack', controller.api.instance.getPack)
   router.post('/api/instance/create', controller.api.instance.create)
+  router.post('/api/instance/lst', controller.api.instance.lst)
   router.get('/*', controller.app.index)
 }

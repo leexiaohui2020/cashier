@@ -33,3 +33,8 @@ export async function getInstancePack(data = {}) {
 export async function createInstance(data = {}) {
   return await instance.post('/api/instance/create', data)
 }
+
+// 实例列表
+export async function getInstanceList(data = {}) {
+  return await instance.post('/api/instance/lst', data)
+}

@@ -9,15 +9,36 @@
         <Button type="primary" size="large" @click="createInstance">创建实例</Button>
       </div>
     </Row>
+
+    <!-- 实例列表 -->
+    <div class="instance-list">
+      <div class="instance-item" v-for="(v, k) of list" :key="k">
+        <InstanceCard :data="v" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import InstanceCard from 'app/component/InstanceCard/main'
 import CreateInstance from 'app/component/CreateInstance/main'
 import { mapState } from 'vuex'
 
 export default {
   name: 'PageInstanceControl',
+  components: {
+    InstanceCard,
+  },
+  data() {
+    return {
+      page: 1,
+      pagesize: 10,
+      list: [],
+      total: 0,
+
+      loading: false
+    }
+  },
   computed: {
     ...mapState('user', ['uid'])
   },
@@ -39,7 +60,26 @@ export default {
 
         template: '<CreateInstance :uid="uid" @create-success="close" />'
       }).open()
+    },
+
+    async lstInstance(page = 1) {
+      if (this.loading) return
+      const uid = this.uid
+      const { pagesize } = this
+      const pager = { page, pagesize }
+      this.loading = true
+      const { data } = await this.$api.getInstanceList({ uid, pager })
+      this.loading = false
+      if (data.status === this.$api.ERR_OK) {
+        this.page = data.data.page
+        this.pagesize = data.data.pagesize
+        this.total = data.data.total
+        this.list = data.data.list
+      }
     }
+  },
+  async mounted() {
+    await this.lstInstance()
   },
   installRouter(router) {
     router.regist('instance-control', '/instance/control', this, {

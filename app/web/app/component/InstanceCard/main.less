@@ -1,0 +1,17 @@
+@import '~common/style/vars';
+
+.card {
+  padding: @margin-df @margin-xl;
+  background: @bg-card;
+  box-shadow: 0 1px 1px @shadow-color;
+  border-top: 8px solid @color-black;
+  cursor: pointer;
+
+  &:hover {
+    border-color: @color-theme;
+  }
+
+  &-content {
+    min-height: 80px;
+  }
+}
