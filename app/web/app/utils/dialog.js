@@ -32,6 +32,7 @@ class Dialog {
         }, data)
       },
 
+      components: Object.assign({}, opts.components),
       computed: Object.assign({}, opts.computed),
 
       methods: Object.assign({

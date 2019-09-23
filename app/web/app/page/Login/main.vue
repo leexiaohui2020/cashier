@@ -124,14 +124,17 @@ export default {
     router.regist('login', '/login', this, {
       title: '登录'
     })
-    router.before((to, from, next) => {
-      if (to.meta.auth === true && !isAuth) {
-        return next({ name: 'login' })
-      }
-      if (to.name === 'login' && isAuth) {
-        return next({ name: 'home' })
-      }
-    })
+
+    if (EASY_ENV_IS_BROWSER) {
+      router.before((to, from, next) => {
+        if (to.meta.auth === true && !isAuth) {
+          return next({ name: 'login' })
+        }
+        if (to.name === 'login' && isAuth) {
+          return next({ name: 'home' })
+        }
+      })
+    }
   }
 }
 </script>

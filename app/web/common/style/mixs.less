@@ -47,3 +47,24 @@
     }
   }
 }
+
+.create-solid(@name) {
+  .solid-@{name} {
+    border-@{name}: @border-width-df solid @border-color;
+
+    &-lg {
+      border-@{name}: @border-width-lg solid @border-color;
+    }
+  }
+}
+.create-solid(@name, @a, @b) {
+  .solid-@{name} {
+    border-@{a}: @border-width-df solid @border-color;
+    border-@{b}: @border-width-df solid @border-color;
+
+    &-lg {
+      border-@{a}: @border-width-df solid @border-color;
+      border-@{b}: @border-width-df solid @border-color;
+    }
+  }
+}

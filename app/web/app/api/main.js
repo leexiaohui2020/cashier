@@ -23,3 +23,13 @@ export async function regist(data = {}) {
 export async function login(data = {}) {
   return await instance.post('/api/user/login', data)
 }
+
+// 获取套餐
+export async function getInstancePack(data = {}) {
+  return await instance.post('/api/instance/getPack', data)
+}
+
+// 创建实例
+export async function createInstance(data = {}) {
+  return await instance.post('/api/instance/create', data)
+}

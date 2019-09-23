@@ -18,6 +18,7 @@ module.exports = ({ mongoose, config }) => {
     callbackUrl: { type: String },
     callbackEmail: { type: String, required: true },
     createdTime: { type: Date },
+    expireTime: { type: Date },
     status: { type: Number, default: instanceStatus.normal }
   })
 

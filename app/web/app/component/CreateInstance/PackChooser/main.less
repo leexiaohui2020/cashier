@@ -1,0 +1,43 @@
+@import '~common/style/vars';
+
+.pack {
+  display: flex;
+  flex-wrap: wrap;
+
+  &-item {
+    width: calc(~"100% / 3 - 10px");
+    border: 1px solid @border-color;
+    margin: @margin-xs;
+    cursor: pointer;
+
+    &:hover, &.active {
+      border-color: @color-theme;
+    }
+
+    &.active > .pack-title {
+      color: @text-reverse;
+      background: @color-theme;
+    }
+  }
+
+  &-title {
+    @h: 36px;
+    height: @h;
+    line-height: @h;
+    text-align: center;
+    background: @border-color;
+  }
+
+  &-detail {
+    padding: @margin-sm;
+
+    &-item {
+      display: flex;
+      justify-content: space-between;
+
+      & + & {
+        margin-top: @margin-xs;
+      }
+    }
+  }
+}
