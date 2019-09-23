@@ -125,16 +125,14 @@ export default {
       title: '登录'
     })
 
-    if (EASY_ENV_IS_BROWSER) {
-      router.before((to, from, next) => {
-        if (to.meta.auth === true && !isAuth) {
-          return next({ name: 'login' })
-        }
-        if (to.name === 'login' && isAuth) {
-          return next({ name: 'home' })
-        }
-      })
-    }
+    router.before((to, from, next) => {
+      if (to.meta.auth === true && !isAuth) {
+        return next({ name: 'login' })
+      }
+      if (to.name === 'login' && isAuth) {
+        return next({ name: 'home' })
+      }
+    })
   }
 }
 </script>

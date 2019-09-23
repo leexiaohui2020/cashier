@@ -1,5 +1,7 @@
 <template>
-  <div>CASHIER</div>
+  <div>
+    <router-link to="/instance/control">控制台</router-link>
+  </div>
 </template>
 
 <script>
