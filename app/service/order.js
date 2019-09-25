@@ -1,4 +1,5 @@
 const Service = require('egg').Service
+const moment = require('moment')
 
 class OrderService extends Service {
 
@@ -27,6 +28,14 @@ class OrderService extends Service {
       (!validate.isInt(totalFee) && totalFee > 0)
     ) {
       return new Error('参数错误')
+    }
+
+    const countToday = await model.Order.countDocuments({
+      instanceId,
+      createdTime: { $gte: new Date(moment(new Date()).format('YYYY-MM-DD')) }
+    })
+    if (countToday >= instance.limit) {
+      return new Error('下单失败，今日下单量已达上限')
     }
 
     const dataObj = {}
