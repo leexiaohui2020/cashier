@@ -149,6 +149,29 @@ class UserService extends Service {
     const { email } = user
     return await this.getCode({ email, body })
   }
+
+  /**
+   * 身份校验
+   * @param {Object} opts 
+   * @param {String} opts.password - 登录密码
+   */
+  async checkAuth(opts = {}) {
+    const { password } = opts
+    const { ctx, app } = this
+    const { model } = app
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+
+    const user = await model.User.findOne({ _id: userStore.uid })
+    if (!user) {
+      return new Error('用户尚未注册')
+    }
+    if (user.password !== password) {
+      return new Error('密码错误')
+    }
+  }
 }
 
 module.exports = UserService

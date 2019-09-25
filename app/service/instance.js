@@ -111,6 +111,316 @@ class InstanceService extends Service {
     }))
     return { page, pagesize, total, list }
   }
+
+  /**
+   * 实例详情
+   * @param {Object} opts
+   * @param {String} opts.isid - 实例id
+   */
+  async dsp(opts = {}) {
+    const { isid } = opts
+    const { ctx, app } = this
+    const { model, config, createSign } = app
+    const userSession = ctx.session['store/user']
+
+    if (!userSession || !await model.User.findOne({ _id: userSession.uid })) {
+      return new Error('请登录')
+    }
+
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例未创建')
+    }
+    if (instance.userId !== userSession.uid) {
+      return new Error('您没有权限浏览该实例')
+    }
+
+    const pack = config.constants.instancePack.find(item => item.limit === instance.limit)
+    const statusMap = [{ text: '正常使用', color: 'success' }, { text: '停止使用', color: 'error' }]
+    const checkUrl = instance.callbackUrl ? await this.checkCallbackUrl({
+      url: instance.callbackUrl,
+      data: {
+        sign: createSign({ id: instance.InstanceId, secret: instance.instanceSecret })
+      }
+    }) : 'none'
+    return Object.assign({}, instance.toJSON(), {
+      packName: pack.name,
+      statusMap: statusMap[instance.status],
+      expireDay: Math.max(0, moment(instance.expireTime).diff(new Date(), 'day')),
+      weixinSetting: !!(instance.weixin && instance.weixin.qrcode),
+      zhifubaoSetting: !!(instance.zhifubao && instance.zhifubao.qrcode),
+      callbackUrlCanUse: checkUrl !== 'none' && !(checkUrl instanceof Error)
+    })
+  }
+
+  /**
+   * 微信收款设置
+   * @param {Object} opts
+   * @param {String} opts.number - 收款账号
+   * @param {String} opts.qrcode - 收款二维码，base64编码
+   * @param {String} opts.isid - 实例id
+   */
+  async setWeixin(opts = {}) {
+    const { number, qrcode, isid } = opts
+    const { ctx, app } = this
+    const { validate, model, Image } = app
+
+    if (
+      !validate.isString(qrcode) ||
+      !validate.isString(isid)
+    ) {
+      return new Error('参数错误')
+    }
+
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+
+    Image.remove(instance.weixin.qrcode)
+    const fileName = Image.save(qrcode)
+    const $set = { 'weixin.qrcode': fileName }
+    if (number) {
+      $set['weixin.number'] = number
+    }
+    await instance.updateOne({ $set })
+  }
+
+  /**
+   * 支付宝收款设置
+   * @param {Object} opts
+   * @param {String} opts.number - 收款账号
+   * @param {String} opts.qrcode - 收款二维码，base64编码
+   * @param {String} opts.isid - 实例id
+   */
+  async setZhifubao(opts = {}) {
+    const { number, qrcode, isid } = opts
+    const { ctx, app } = this
+    const { validate, model, Image } = app
+
+    if (
+      !validate.isString(qrcode) ||
+      !validate.isString(isid)
+    ) {
+      return new Error('参数错误')
+    }
+
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+
+    Image.remove(instance.zhifubao.qrcode)
+    const fileName = Image.save(qrcode)
+    const $set = { 'zhifubao.qrcode': fileName }
+    if (number) {
+      $set['zhifubao.number'] = number
+    }
+    await instance.updateOne({ $set })
+  }
+
+  /**
+   * 邮箱换绑
+   * @param {Object} opts 
+   * @param {String} opts.email - 新邮箱
+   * @param {String} opts.code - 验证码
+   * @param {String} opts.isid
+   */
+  async changeEmail(opts = {}) {
+    const { code, email, isid } = opts
+    const { ctx, app } = this
+    const { validate, model } = app
+
+    if (
+      !validate.isString(code) ||
+      !validate.isString(email) ||
+      !validate.isString(isid)
+    ) {
+      return new Error('参数错误')
+    }
+
+    if (!validate.isEmail(email)) {
+      return new Error('邮箱格式错误')
+    }
+
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+
+    if (code !== ctx.session.code) {
+      return new Error('验证码错误')
+    }
+
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+    if (instance.callbackEmail === email) {
+      return new Error('请使用新邮箱')
+    }
+    if (await model.Instance.findOne({ callbackEmail: email })) {
+      return new Error('邮箱已绑定了其他实例')
+    }
+
+    await instance.updateOne({
+      $set: {
+        callbackEmail: email
+      }
+    })
+  }
+
+  /**
+   * 验证回调地址
+   * @param {Object} opts 
+   * @param {String} opts.url
+   * @param {Object} opts.data
+   */
+  async checkCallbackUrl(opts = {}) {
+    const { url, data = {} } = opts
+    const { ctx, app } = this
+    const { validate } = app
+
+    if (!validate.isString(url)) {
+      return new Error('参数错误')
+    }
+    if (!/^https?\:\/\//.test(url)) {
+      return new Error('地址错误')
+    }
+    
+    let res
+    try {
+      res = await ctx.curl(url, {
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'json',
+        data: {
+          type: 'check',
+          ...data
+        }
+      })
+    } catch(e) {
+      app.logger.info(e.message)
+      return new Error('验证失败')
+    }
+
+    if (res.status !== 200) {
+      return new Error('验证失败')
+    }
+
+    if (res.data.status !== 'ok') {
+      return new Error('验证失败')
+    }
+  }
+
+  /**
+   * 更换回调地址
+   * @param {Object} opts 
+   * @param {String} opts.url - 回调地址
+   * @param {String} opts.isid
+   */
+  async changeCallbackUrl(opts = {}) {
+    const { url, isid } = opts
+    const { ctx, app } = this
+    const { validate, model, createSign } = app
+
+    if (
+      !validate.isString(url) ||
+      !validate.isString(isid)
+    ) {
+      return new Error('参数错误')
+    }
+
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+
+    const sign = createSign({ id: instance.instanceId, secret: instance.instanceSecret })
+    const res = await this.checkCallbackUrl({ url, data: { sign } })
+    if (res instanceof Error) {
+      return res
+    }
+
+    await instance.updateOne({ $set: { callbackUrl: url } })
+  }
+
+  /**
+   * 关闭实例
+   * @param {Object} opts
+   * @param {String} opts.isid
+   */
+  async pause(opts = {}) {
+    const { isid } = opts
+    const { ctx, app } = this
+    const { model, config } = app
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+    await instance.updateOne({
+      $set: { status: config.constants.instanceStatus.forbidden }
+    })
+  }
+
+  /**
+   * 开启实例
+   * @param {Object} opts
+   * @param {String} opts.isid
+   */
+  async start(opts = {}) {
+    const { isid } = opts
+    const { ctx, app } = this
+    const { model, config } = app
+    const userStore = ctx.session['store/user']
+    if (!userStore || !userStore.uid) {
+      return new Error('请登录')
+    }
+    const instance = await model.Instance.findOne({ _id: isid })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.userId !== userStore.uid) {
+      return new Error('您没有操作权限')
+    }
+    await instance.updateOne({
+      $set: { status: config.constants.instanceStatus.normal }
+    })
+  }
 }
 
 module.exports = InstanceService

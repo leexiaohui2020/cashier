@@ -7,7 +7,7 @@
         <p class="margin-top-xs" v-if="data.description">{{ data.description }}</p>
       </div>
       <div>
-        <a href="javascript:;">详情</a>
+        <a href="javascript:;" @click.stop="onBrowser">详情</a>
         <a class="margin-left-xs" href="javascript:;">停止</a>
       </div>
     </Row>
@@ -29,6 +29,11 @@ export default {
     data: {
       type: Object,
       default: () => {}
+    }
+  },
+  methods: {
+    async onBrowser() {
+      this.$emit('on-browser', this.data)
     }
   }
 }

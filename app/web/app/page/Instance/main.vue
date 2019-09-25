@@ -13,7 +13,7 @@
     <!-- 实例列表 -->
     <div class="instance-list">
       <div class="instance-item" v-for="(v, k) of list" :key="k">
-        <InstanceCard :data="v" />
+        <InstanceCard :data="v" @on-browser="onBrowserInstance" />
       </div>
     </div>
   </div>
@@ -84,6 +84,11 @@ export default {
 
     async refreshData() {
       await this.lstInstance(this.page)
+    },
+
+    async onBrowserInstance(item) {
+      const isid = item.id
+      this.$router.push({ name: 'instance-detail', query: { isid } })
     }
   },
   async mounted() {

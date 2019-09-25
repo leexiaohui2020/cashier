@@ -45,6 +45,17 @@ class UserApiController extends Controller {
       ctx.body = { status: 'ok', data }
     }
   }
+  
+  /** 身份校验 */
+  async checkAuth() {
+    const { ctx } = this
+    const data = await ctx.service.user.checkAuth(ctx.request.body)
+    if (data instanceof Error) {
+      ctx.body = { status: 'err', errmsg: data.message }
+    } else {
+      ctx.body = { status: 'ok', data }
+    }
+  }
 }
 
 module.exports = UserApiController

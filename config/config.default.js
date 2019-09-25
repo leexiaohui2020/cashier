@@ -35,6 +35,10 @@ module.exports = app => ({
     url: 'mongodb://localhost:27017/cashier-dev-v1'
   },
 
+  bodyParser: {
+    jsonLimit: '10mb'
+  },
+
   constants: {
 
     hostname: 'http://www.baidu.com',

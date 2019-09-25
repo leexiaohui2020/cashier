@@ -8,3 +8,4 @@ typings/
 appveyor.yml
 jsconfig.json
 package-lock.json
+upload/

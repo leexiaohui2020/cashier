@@ -1,8 +1,8 @@
-const md5 = require('md5')
-const nodemailer = require('nodemailer')
 const fs = require('fs')
 const ejs = require('ejs')
+const md5 = require('md5')
 const path = require('path')
+const nodemailer = require('nodemailer')
 
 exports.validate = (() => {
   const ruleMap = []
@@ -47,5 +47,46 @@ exports.sendMail = (() => {
       subject,
       html: ejs.render(content, data)
     })
+  }
+})()
+
+exports.Image = (() => {
+
+  const ensureFolder = dir => {
+    if (fs.existsSync(dir)) {
+      return
+    }
+    ensureFolder(path.dirname(dir))
+    fs.mkdirSync(dir)
+  }
+
+  const save = base64Data => {
+    const data = Buffer.from(base64Data.split(',')[1], 'base64')
+    const fileName = exports.createSign({ base64Data, timeStamps: Date.now() }) + '.png'
+    const fileDir = path.join(__dirname, `../upload/image`)
+    ensureFolder(fileDir)
+    fs.writeFileSync(path.join(fileDir, fileName), data)
+    return fileName
+  }
+
+  const remove = fileName => {
+    const filePath = path.join(__dirname, `../upload/image/${fileName}`)
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
+    }
+  }
+
+  const get = fileName => {
+    const filePath = path.join(__dirname, `../upload/image/${fileName}`)
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath)
+    }
+    return new Error('文件不存在')
+  }
+
+  return {
+    get,
+    save,
+    remove
   }
 })()

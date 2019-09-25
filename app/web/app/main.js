@@ -23,6 +23,8 @@ Vue.use(Validate)
 
 Vue.prototype.$api = api
 
+Vue.filter('image', filename => `http://127.0.0.1:18081/image/${filename}`)
+
 export default new App({
   index,
   createStore,
