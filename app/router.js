@@ -18,6 +18,8 @@ module.exports = app => {
   router.post('/api/instance/start', controller.api.instance.start)
   router.post('/api/instance/pause', controller.api.instance.pause)
 
+  router.post('/open-api/order/create', controller.openApi.order.create)
+
   // router.post('/callback/test2019', controller.instance.callback.Test2019)
 
   router.get('/image/:filename', controller.app.image)

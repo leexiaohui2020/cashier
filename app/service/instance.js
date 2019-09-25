@@ -140,16 +140,28 @@ class InstanceService extends Service {
     const checkUrl = instance.callbackUrl ? await this.checkCallbackUrl({
       url: instance.callbackUrl,
       data: {
-        sign: createSign({ id: instance.InstanceId, secret: instance.instanceSecret })
+        sign: createSign({ id: instance.instanceId, secret: instance.instanceSecret })
       }
     }) : 'none'
+
+    const countOrder = {}
+    countOrder.today = await model.Order.countDocuments({
+      instanceId: instance.instanceId,
+      createdTime: { $gte: new Date(moment(new Date()).format('YYYY-MM-DD'))}
+    })
+    countOrder.tomonth = await model.Order.countDocuments({
+      instanceId: instance.instanceId,
+      createdTime: { $gte: new Date(moment(new Date()).format('YYYY-MM'))}
+    })
+
     return Object.assign({}, instance.toJSON(), {
       packName: pack.name,
       statusMap: statusMap[instance.status],
       expireDay: Math.max(0, moment(instance.expireTime).diff(new Date(), 'day')),
       weixinSetting: !!(instance.weixin && instance.weixin.qrcode),
       zhifubaoSetting: !!(instance.zhifubao && instance.zhifubao.qrcode),
-      callbackUrlCanUse: checkUrl !== 'none' && !(checkUrl instanceof Error)
+      callbackUrlCanUse: checkUrl !== 'none' && !(checkUrl instanceof Error),
+      countOrder
     })
   }
 

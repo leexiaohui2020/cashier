@@ -30,14 +30,14 @@
         <div class="flex-sub">
           <h4 class="text-color-l margin-bottom-xs">今日订单量</h4>
           <div style="font-weight: 600">
-            <span style="font-size: 40px">0</span>
-            <span class="text-color-l">条 / 50 条</span>
+            <span style="font-size: 40px">{{ detail.countOrder.today }}</span>
+            <span class="text-color-l">条 / {{ detail.limit }} 条</span>
           </div>
         </div>
         <div class="flex-sub">
           <h4 class="text-color-l margin-bottom-xs">本月订单量</h4>
           <div style="font-weight: 600">
-            <span style="font-size: 40px">0</span>
+            <span style="font-size: 40px">{{ detail.countOrder.tomonth }}</span>
             <span class="text-color-l">条</span>
           </div>
         </div>

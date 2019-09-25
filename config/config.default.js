@@ -3,7 +3,11 @@ const path = require('path')
 
 module.exports = app => ({
   keys: `${app.name}_1566719008112_4418`,
-  middleware: [],
+  middleware: ['instanceAuth'],
+
+  instanceAuth: {
+    match: '/open-api'
+  },
 
   vuessr: {
     layout: path.join(app.baseDir, 'app/web/index.html'),

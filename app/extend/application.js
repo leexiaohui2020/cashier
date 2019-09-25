@@ -11,6 +11,7 @@ exports.validate = (() => {
   addRule('isString', v => typeof v === 'string' && v.length > 0)
   addRule('isEmail', v => /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v))
   addRule('validAccount', v => /^[A-Za-z][A-Za-z0-9\_]{5,}$/.test(v))
+  addRule('isInt', v => parseInt(v) === v)
 
   return new Proxy(ruleMap, {
     get(target, key) {
