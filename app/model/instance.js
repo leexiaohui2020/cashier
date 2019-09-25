@@ -1,7 +1,7 @@
 module.exports = ({ mongoose, config }) => {
   const { instanceLevel, instanceStatus } = config.constants
   const schema = new mongoose.Schema({
-    userId: { type: String, index: true, unique: true, required: true },
+    userId: { type: String, required: true },
     instanceId: { type: String, index: true, unique: true, required: true },
     instanceSecret: { type: String, required: true },
     name: { type: String, required: true },

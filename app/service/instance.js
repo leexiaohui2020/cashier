@@ -62,6 +62,11 @@ class InstanceService extends Service {
 
     const userId = uid
     const limit = pack.limit
+    const freeCount = await model.Instance.countDocuments({ userId, limit })
+    if (freeCount >= config.constants.instanceFreeLimit) {
+      return new Error('您可创建的免费实例已达上限')
+    }
+
     const dataObj = { name, callbackEmail, userId, limit }
     dataObj.createdTime = new Date()
     dataObj.expireTime = new Date()

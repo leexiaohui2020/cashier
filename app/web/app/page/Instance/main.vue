@@ -3,7 +3,7 @@
     <Row class="padding-bottom margin-bottom solid-bottom" type="flex" justify="space-between" align="middle">
       <h1 class="instance-title">实例列表</h1>
       <div>
-        <Button class="margin-right-xs" size="large">
+        <Button class="margin-right-xs" size="large" @click="lstInstance">
           <Icon type="md-sync" size="18" />
         </Button>
         <Button type="primary" size="large" @click="createInstance">创建实例</Button>
@@ -25,7 +25,7 @@ import CreateInstance from 'app/component/CreateInstance/main'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'PageInstanceControl',
+  name: 'PageInstance',
   components: {
     InstanceCard,
   },
@@ -53,12 +53,16 @@ export default {
             uid: self.uid
           }
         },
-
         components: {
           CreateInstance
         },
-
-        template: '<CreateInstance :uid="uid" @create-success="close" />'
+        methods: {
+          async onSuccess() {
+            this.close()
+            await self.refreshData()
+          }
+        },
+        template: '<CreateInstance :uid="uid" @create-success="onSuccess" />'
       }).open()
     },
 
@@ -76,13 +80,22 @@ export default {
         this.total = data.data.total
         this.list = data.data.list
       }
+    },
+
+    async refreshData() {
+      await this.lstInstance(this.page)
     }
   },
   async mounted() {
     await this.lstInstance()
   },
+  watch: {
+    loading(flag) {
+      this.$Loading[flag ? 'start' : 'finish']()
+    }
+  },
   installRouter(router) {
-    router.regist('instance-control', '/instance/control', this, {
+    router.regist('instance', '/instance', this, {
       auth: true,
       title: '实例控制台'
     })

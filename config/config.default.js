@@ -59,30 +59,14 @@ module.exports = app => ({
         name: '免费套餐',
         price: 0,
         limit: 50
-      },
-      // {
-      //   id: 'silver',
-      //   name: '白银套餐',
-      //   price: 1900,
-      //   limit: 500
-      // },
-      // {
-      //   id: 'honor',
-      //   name: '至尊套餐',
-      //   price: 5900,
-      //   limit: 2000
-      // },
-      // {
-      //   id: 'infinite',
-      //   name: '无限套餐',
-      //   price: 9900,
-      //   limit: 0
-      // }
+      }
     ],
 
     instanceStatus: {
       normal: 0,
       forbidden: 1
-    }
+    },
+
+    instanceFreeLimit: 1
   }
 })
