@@ -13,7 +13,8 @@ module.exports = ({ mongoose }) => {
     payTime: { type: Date },
     confirmTime: { type: Date },
     cancelTime: { type: Date },
-    refundTime: { type: Date }
+    refundTime: { type: Date },
+    email: { type: String, required: true }
   })
 
   schema.static({

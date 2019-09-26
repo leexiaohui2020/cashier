@@ -14,7 +14,6 @@
           :auto-crop-height="cropHeight"
           :centerBox="true"
           :fixed="true"
-          :can-scale="false"
         />
       </div>
     </div>

@@ -429,6 +429,14 @@ class InstanceService extends Service {
     if (instance.userId !== userStore.uid) {
       return new Error('您没有操作权限')
     }
+
+    if (!instance.weixin.qrcode) {
+      return new Error('请设置微信收款信息')
+    }
+    if (!instance.zhifubao.qrcode) {
+      return new Error('请设置支付宝收款信息')
+    }
+
     await instance.updateOne({
       $set: { status: config.constants.instanceStatus.normal }
     })

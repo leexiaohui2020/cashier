@@ -77,3 +77,13 @@ export async function startInstance(data = {}) {
 export async function pauseInstance(data = {}) {
   return await instance.post('/api/instance/pause', data)
 }
+
+// 查询订单
+export async function dspOrder(data = {}) {
+  return await instance.post('/api/order/dsp', data)
+}
+
+// 提交付款检查
+export async function payExamineRequest(data = {}) {
+  return await instance.post('/api/order/payExamineRequest', data)
+}

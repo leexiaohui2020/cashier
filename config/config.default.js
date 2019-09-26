@@ -36,7 +36,7 @@ module.exports = app => ({
   },
 
   mongoose: {
-    url: 'mongodb://localhost:27017/cashier-dev-v1'
+    url: 'mongodb://localhost:27017/cashier-dev-v2'
   },
 
   bodyParser: {
@@ -45,7 +45,7 @@ module.exports = app => ({
 
   constants: {
 
-    hostname: 'http://www.baidu.com',
+    hostname: 'http://127.0.0.1:18081',
 
     MONGO_OPTIONS: {
       timestamps: {

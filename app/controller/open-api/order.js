@@ -2,6 +2,7 @@ const Controller = require('egg').Controller
 
 class OrderOPControler extends Controller {
 
+  // 创建订单
   async create() {
     const { ctx } = this
     const data = await ctx.service.order.create(ctx.request.body)

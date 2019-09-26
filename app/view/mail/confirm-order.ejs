@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>收款通知</title>
+  </head>
+  <body>
+    <p>您好，<%= instance.email %></p>
+    <p>电子邮箱为 <%= customer.email %> 的用户向您的易收银实例 <%= instance.name %> 支付了一笔订单费用，以下是订单详情，请在 48 小时内完成审核：</p>
+    <dl>
+      <dt>商品：</dt>
+      <dd><%= order.title %></dd>
+      <dt>费用：</dt>
+      <dd>￥<%= order.totalFee / 100 %></dd>
+      <dt>付款方：</dt>
+      <dd><%= customer.email %></dd>
+      <dt>付款时间：</dt>
+      <dd><%= order.payTime %></dd>
+      <dt>流水号：</dt>
+      <dd><%= order.number %></dd>
+    </dl>
+
+    <a style="padding: 8px 16px; color: #FFF; background: #E54444" href="<%= link.ok %>">是的，我已收到付款</a>
+    <a style="padding: 8px 16px; color: #FFF; background: #0081ff; margin-left: 5px" href="<%= link.no %>">未曾收到付款</a>
+  </body>
+</html>
