@@ -45,7 +45,8 @@ module.exports = app => ({
 
   constants: {
 
-    hostname: 'http://127.0.0.1:18081',
+    // hostname: 'http://127.0.0.1:18081',
+    hostname: 'https://epay.leexiaohui.top',
 
     MONGO_OPTIONS: {
       timestamps: {
