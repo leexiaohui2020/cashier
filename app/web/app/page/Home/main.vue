@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <router-link to="/instance">控制台</router-link>
-  </div>
+  <LeeLayout active="home"></LeeLayout>
 </template>
 
 <script>

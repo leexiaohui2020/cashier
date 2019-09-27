@@ -1,0 +1,160 @@
+@import '~common/style/vars';
+
+@screen: 750px;
+@header-height: 48px;
+@header-color: @color-theme;
+@footer-height: 48px;
+
+
+.layout {
+  background: #F0F0F0;
+
+  &-header {
+    height: @header-height;
+    background: @header-color;
+    padding: 0 @margin-sm;
+
+    &-brand {
+      float: left;
+      height: @header-height + 10px;
+      background: @bg-card;
+      padding: @margin-df;
+      min-width: 150px;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 1px 2px 1px @shadow-color;
+      margin-right: @margin-lg;
+    }
+
+    &-extra {
+      float: right;
+      height: @header-height;
+      line-height: @header-height;
+    }
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: @footer-height;
+    color: @text-color-l;
+    font-size: @text-sm;
+    flex-direction: column;
+  }
+
+  &-main {
+    min-height: calc(~"100% - "@header-height + @footer-height);
+    padding: @margin-lg @margin-sm;
+  }
+}
+
+.icon-btn {
+  color: @text-reverse-l;
+
+  & + & {
+    margin-left: @margin-sm;
+  }
+
+  &:hover {
+    color: @text-reverse;
+  }
+}
+
+@media screen and (max-width: @screen) {
+  .layout {
+
+    &-header {
+      position: relative;
+
+      &-brand {
+        margin-left: -@margin-sm;
+      }
+    }
+
+    &-menu {
+      left: @margin-df;
+      top: calc(~"100% + "@margin-lg);
+      width: calc(~"100% - "2 * @margin-df);
+      position: absolute;
+      z-index: @z-index-df;
+      list-style: none;
+      background: @bg-body;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px @shadow-color;
+      padding: @margin-sm 0;
+      max-height: 150px;
+      transition: all .382s;
+      overflow: hidden;
+
+      &-item {
+        color: @text-color-l;
+        padding: @margin-sm @margin-df;
+
+        &.active {
+          color: @text-color;
+          background: darken(@bg-body, 10%);
+        }
+      }
+
+      &:not(.open) {
+        max-height: 0;
+        padding: 0;
+      }
+    }
+
+    &-main {
+      min-height: calc(~"100vh - "@header-height + @footer-height);
+    }
+  }
+
+  .icon-btn > span {
+    display: none;
+  }
+  .icon-btn {
+    font-size: @text-xl;
+    font-weight: 600;
+  }
+}
+
+@media screen and (min-width: calc(@screen + 1px)) {
+  .layout {
+    @margin: 20px;
+    width: calc(~"100vw - "2 * @margin);
+    height: calc(~"100vh - "2 * @margin);
+    max-width: 1500px;
+    margin: @margin auto;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px @shadow-color;
+
+    &-menu {
+      float: left;
+      height: @header-height;
+      display: flex;
+
+      &-item {
+        min-width: 80px;
+        padding: 0 @margin-sm;
+        height: @header-height;
+        line-height: @header-height;
+        text-align: center;
+        list-style: none;
+        cursor: pointer;
+        color: @text-reverse;
+        border-radius: 5px;
+
+        & + & {
+          margin-left: @margin-sm;
+        }
+
+        &:hover, &.active {
+          background: lighten(@color-theme, 5%);
+        }
+      }
+    }
+  }
+
+  .hide-pc {
+    display: none;
+  }
+}
