@@ -56,6 +56,13 @@ class UserApiController extends Controller {
       ctx.body = { status: 'ok', data }
     }
   }
+
+  /** 登出 */
+  async logout() {
+    const { ctx } = this
+    await ctx.service.user.logout()
+    ctx.body = { status: 'ok' }
+  }
 }
 
 module.exports = UserApiController

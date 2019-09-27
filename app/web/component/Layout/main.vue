@@ -1,26 +1,42 @@
 <template>
-  <div class="layout">
-    <header class="layout-header">
-      <div class="layout-header-brand"></div>
-      <ul class="layout-menu" :class="{ open: menuShow }">
-        <router-link tag="li" class="layout-menu-item" :class="{ active: active === v.id }" v-for="(v, k) of menu" :key="k" :to="v.link">
-          <span>{{ v.title }}</span>
-        </router-link>
-      </ul>
-      <div class="layout-header-extra">
-        <a href="javascript:;" class="icon-btn">
-          <Icon type="md-log-in" />
-          <span>登入</span>
-        </a>
-        <a href="javascript:;" class="icon-btn">
-          <Icon type="md-create" />
-          <span>注册</span>
-        </a>
-        <a href="javascript:;" class="icon-btn hide-pc" @click="menuShow = !menuShow">
-          <Icon :type="`md-${menuShow ? 'close' : 'menu'}`" />
-        </a>
-      </div>
-    </header>
+  <div class="layout" v-loading="loading">
+    <div class="custom-header">
+      <header class="layout-header">
+        <div class="layout-header-brand"></div>
+        <ul class="layout-menu" :class="{ open: menuShow }">
+          <router-link tag="li" class="layout-menu-item" :class="{ active: active === v.id }" v-for="(v, k) of menu" :key="k" :to="v.link">
+            <span>{{ v.title }}</span>
+          </router-link>
+        </ul>
+        <div class="layout-header-extra">
+          <router-link to="/login" class="icon-btn" v-show="!isAuth">
+            <Icon type="md-log-in" />
+            <span>登入</span>
+          </router-link>
+          <router-link to="/regist" class="icon-btn" v-show="!isAuth">
+            <Icon type="md-create" />
+            <span>注册</span>
+          </router-link>
+
+          <Dropdown transfer @on-click="onDropMenu" v-if="isAuth">
+            <a href="javascript:;" class="icon-btn margin-lr-xs">
+              <Icon type="md-contact" />
+              <span>您好！{{ userInfo.email }}</span>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem name="logout">
+                <Icon type="md-log-out" />
+                <span>退出登录</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          
+          <a href="javascript:;" class="icon-btn hide-pc" @click="menuShow = !menuShow">
+            <Icon :type="`md-${menuShow ? 'close' : 'menu'}`" />
+          </a>
+        </div>
+      </header>
+    </div>
 
     <main class="layout-main">
       <slot />
@@ -33,7 +49,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'LeeLayout',
   props: {
@@ -44,11 +60,34 @@ export default {
   },
   data() {
     return {
-      menuShow: false
+      menuShow: false,
+      loading: false
     }
   },
   computed: {
-    ...mapState('app', ['menu'])
+    ...mapState('app', ['menu']),
+    ...mapState('user', ['userInfo']),
+    ...mapGetters('user', ['isAuth'])
+  },
+  methods: {
+    async onDropMenu(name) {
+      await this[name]()
+    },
+
+    async startLoading() {
+      this.loading = true
+    },
+
+    async finishLoading() {
+      this.loading = false
+    },
+
+    async logout() {
+      this.startLoading()
+      await this.$api.logout()
+      this.finishLoading()
+      location.reload()  
+    }
   }
 }
 </script>

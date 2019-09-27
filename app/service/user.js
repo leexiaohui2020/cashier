@@ -172,6 +172,14 @@ class UserService extends Service {
       return new Error('密码错误')
     }
   }
+
+  /**
+   * 退出登录
+   */
+  async logout() {
+    const { ctx } = this
+    delete ctx.session['store/user']
+  }
 }
 
 module.exports = UserService

@@ -8,11 +8,15 @@
 
 .layout {
   background: #F0F0F0;
+  position: relative;
 
   &-header {
+    width: 100%;
     height: @header-height;
     background: @header-color;
     padding: 0 @margin-sm;
+    position: fixed;
+    z-index: @z-index-df;
 
     &-brand {
       float: left;
@@ -45,6 +49,7 @@
   &-main {
     min-height: calc(~"100% - "@header-height + @footer-height);
     padding: @margin-lg @margin-sm;
+    position: relative;
   }
 }
 
@@ -60,11 +65,15 @@
   }
 }
 
+.custom-header {
+  width: 100%;
+  height: @header-height;
+}
+
 @media screen and (max-width: @screen) {
   .layout {
 
     &-header {
-      position: relative;
 
       &-brand {
         margin-left: -@margin-sm;
@@ -151,6 +160,11 @@
           background: lighten(@color-theme, 5%);
         }
       }
+    }
+
+    &-header {
+      width: calc(~"100vw - "2 * @margin);
+      max-width: 1500px;
     }
   }
 

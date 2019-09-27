@@ -24,6 +24,11 @@ export async function login(data = {}) {
   return await instance.post('/api/user/login', data)
 }
 
+// 登出
+export async function logout(data = {}) {
+  return await instance.post('/api/user/logout', data)
+}
+
 // 获取套餐
 export async function getInstancePack(data = {}) {
   return await instance.post('/api/instance/getPack', data)

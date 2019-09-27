@@ -1,26 +1,28 @@
 <template>
-  <div class="login">
-    <div class="login-modal">
-      <h1 class="login-title">会员登录</h1>
-      <Form ref="form" :model="form" :rules="rules">
-        <FormItem prop="account">
-          <i-input v-model="form.account" prefix="md-contact" placeholder="请填写用户名/邮箱" />
-        </FormItem>
-        <FormItem prop="password">
-          <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
-        </FormItem>
-        <FormItem prop="code">
-          <Row type="flex" align="middle">
-            <div class="flex-sub padding-right-xs">
-              <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
-            </div>
-            <Button :disabled="sendCodeDisabled" @click="sendCode">{{ codeBufferText }}</Button>
-          </Row>
-        </FormItem>
-        <Button type="primary" long :loading="loading" @click="submit">登录</Button>
-      </Form>
+  <lee-layout>
+    <div class="login">
+      <div class="login-modal">
+        <h1 class="login-title">会员登录</h1>
+        <Form ref="form" :model="form" :rules="rules">
+          <FormItem prop="account">
+            <i-input v-model="form.account" prefix="md-contact" placeholder="请填写用户名/邮箱" />
+          </FormItem>
+          <FormItem prop="password">
+            <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
+          </FormItem>
+          <FormItem prop="code">
+            <Row type="flex" align="middle">
+              <div class="flex-sub padding-right-xs">
+                <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
+              </div>
+              <Button :disabled="sendCodeDisabled" @click="sendCode">{{ codeBufferText }}</Button>
+            </Row>
+          </FormItem>
+          <Button type="primary" long :loading="loading" @click="submit">登录</Button>
+        </Form>
+      </div>
     </div>
-  </div>
+  </lee-layout>
 </template>
 
 <script>
@@ -127,10 +129,13 @@ export default {
 
     router.before((to, from, next) => {
       if (to.meta.auth === true && !isAuth) {
-        return next({ name: 'login' })
+        next({ name: 'login' })
+        return true
       }
+
       if (to.name === 'login' && isAuth) {
-        return next({ name: 'home' })
+        next({ name: 'home' })
+        return true
       }
     })
   }

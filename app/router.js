@@ -6,6 +6,7 @@ module.exports = app => {
   router.post('/api/user/sendCodeByAccount', controller.api.user.sendCodeByAccount)
   router.post('/api/user/login', controller.api.user.login)
   router.post('/api/user/checkAuth', controller.api.user.checkAuth)
+  router.post('/api/user/logout', controller.api.user.logout)
 
   router.post('/api/instance/getPack', controller.api.instance.getPack)
   router.post('/api/instance/create', controller.api.instance.create)
