@@ -87,3 +87,13 @@ export async function dspOrder(data = {}) {
 export async function payExamineRequest(data = {}) {
   return await instance.post('/api/order/payExamineRequest', data)
 }
+
+// 付款检查通过
+export async function payExamineOk(data = {}) {
+  return await instance.post('/api/order/payExamineOk', data)
+}
+
+// 付款检查失败
+export async function payExamineNo(data = {}) {
+  return await instance.post('/api/order/payExamineNo', data)
+}

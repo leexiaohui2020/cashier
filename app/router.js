@@ -20,10 +20,12 @@ module.exports = app => {
 
   router.post('/api/order/dsp', controller.api.order.dsp)
   router.post('/api/order/payExamineRequest', controller.api.order.payExamineRequest)
+  router.post('/api/order/payExamineOk', controller.api.order.payExamineOk)
+  router.post('/api/order/payExamineNo', controller.api.order.payExamineNo)
 
   router.post('/open-api/order/create', controller.openApi.order.create)
 
-  // router.post('/callback/test2019', controller.instance.callback.Test2019)
+  router.post('/callback/test2019', controller.instance.callback.Test2019)
 
   router.get('/image/:filename', controller.app.image)
   router.get('/*', controller.app.index)

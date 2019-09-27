@@ -34,5 +34,13 @@ module.exports = ({ mongoose }) => {
     }
   })
 
+  schema.virtual('status').get(function () {
+    if (this.refundTime) return 'refund'
+    if (this.cancelTime) return 'cancel'
+    if (this.confirmTime) return 'confirm'
+    if (this.payTime) return 'pay'
+    return 'create'
+  })
+
   return mongoose.model('Order', schema, 'Order')
 }

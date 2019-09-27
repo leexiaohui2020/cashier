@@ -9,11 +9,11 @@ class OrderService extends Service {
    * @param {String} opts.title - 商品名称
    * @param {String} opts.description - 商品详情
    * @param {Number} opts.totalFee - 应付金额
-   * @param {String} opts.attach - 附属信息
+   * @param {String} opts.attached - 附属信息
    * @param {String} opts.email - 付款者邮箱
    */
   async create(opts) {
-    const { title, description, totalFee, attach, email } = opts
+    const { title, description, totalFee, attached, email } = opts
     const { ctx, app } = this
     const { validate, model, config } = app
     const instanceId = ctx.headers['x-instance-id']
@@ -56,7 +56,7 @@ class OrderService extends Service {
     dataObj.createdTime = new Date()
     dataObj.number = await model.Order.createNumber(instanceId)
 
-    if (attach) dataObj.attach = attach
+    if (attached) dataObj.attached = attached
     if (description) dataObj.description = description
 
     const order = await model.Order.create(dataObj)
@@ -148,6 +148,7 @@ class OrderService extends Service {
 
     data.customer.email = order.email
 
+    data.order.number = order.number
     data.order.title = order.title
     data.order.totalFee = order.totalFee
     data.order.payTime = moment(payTime).format('YYYY-MM-DD HH:mm:ss')
@@ -157,6 +158,156 @@ class OrderService extends Service {
 
     await order.updateOne({ $set: { payTime } })
     await sendMail(instance.callbackEmail, '收到付款通知', 'confirm-order', data)
+  }
+
+  /**
+   * 确认支付完成
+   * @param {Object} opts
+   * @param {String} opts.orderId - 订单id
+   * @param {String} opts.instanceId - 实例id
+   * @param {String} opts.instanceSecret - 实例秘钥
+   */
+  async payExamineOk(opts = {}) {
+    const { orderId, instanceId, instanceSecret } = opts
+    const { validate, model } = this.app
+
+    if (
+      !validate.isString(orderId) ||
+      !validate.isString(instanceId) ||
+      !validate.isString(instanceSecret)
+    ) {
+      return new Error('参数错误')
+    }
+
+    const instance = await model.Instance.findOne({ _id: instanceId })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.instanceSecret !== instanceSecret) {
+      return new Error('校验失败')
+    }
+
+    const order = await model.Order.findOne({ _id: orderId, instanceId: instance.instanceId })
+    if (!order) {
+      return new Error('订单尚未创建')
+    }
+    if (order.status !== 'pay') {
+      return new Error('订单尚未提交付款审核')
+    }
+
+    const confirmTime = new Date()
+    await order.updateOne({ $set: { confirmTime } })
+    
+    // 支付回调
+    const url = instance.callbackUrl
+    const { ctx } = this
+    const request = async (times) => {
+      if (times === 0) return
+      try {
+        const res = await ctx.curl(url, {
+          method: 'POST',
+          dataType: 'json',
+          contentType: 'json',
+          data: {
+            type: 'pay-confirm',
+            data: {
+              title: order.title,
+              description: order.description,
+              totalFee: order.totalFee,
+              number: order.number,
+              attached: order.attached,
+              email: order.email,
+              createTime: order.createTime,
+              payTime: order.payTime,
+              confirmTime: order.confirmTime,
+              status: order.status
+            }
+          }
+        })
+        if (res.status !== 200 || res.data.status !== 'ok') {
+          throw new Error()
+        }
+      } catch(e) {
+        await request(times - 1)
+      }
+    }
+
+    await request(5)
+  }
+  
+  /**
+   * 支付审核失败
+   * @param {Object} opts
+   * @param {String} opts.orderId - 订单id
+   * @param {String} opts.instanceId - 实例id
+   * @param {String} opts.instanceSecret - 实例秘钥
+   */
+  async payExamineNo(opts = {}) {
+    const { orderId, instanceId, instanceSecret } = opts
+    const { validate, model } = this.app
+
+    if (
+      !validate.isString(orderId) ||
+      !validate.isString(instanceId) ||
+      !validate.isString(instanceSecret)
+    ) {
+      return new Error('参数错误')
+    }
+
+    const instance = await model.Instance.findOne({ _id: instanceId })
+    if (!instance) {
+      return new Error('实例尚未创建')
+    }
+    if (instance.instanceSecret !== instanceSecret) {
+      return new Error('校验失败')
+    }
+
+    const order = await model.Order.findOne({ _id: orderId, instanceId: instance.instanceId })
+    if (!order) {
+      return new Error('订单尚未创建')
+    }
+    if (order.status !== 'pay') {
+      return new Error('订单尚未提交付款审核')
+    }
+
+    const cancelTime = new Date()
+    await order.updateOne({ $set: { cancelTime } })
+    
+    // 支付回调
+    const url = instance.callbackUrl
+    const { ctx } = this
+    const request = async (times) => {
+      if (times === 0) return
+      try {
+        const res = await ctx.curl(url, {
+          method: 'POST',
+          dataType: 'json',
+          contentType: 'json',
+          data: {
+            type: 'pay-cancel',
+            data: {
+              title: order.title,
+              description: order.description,
+              totalFee: order.totalFee,
+              number: order.number,
+              attached: order.attached,
+              email: order.email,
+              createTime: order.createTime,
+              payTime: order.payTime,
+              cancelTime: order.cancelTime,
+              status: order.status
+            }
+          }
+        })
+        if (res.status !== 200 || res.data.status !== 'ok') {
+          throw new Error()
+        }
+      } catch(e) {
+        await request(times - 1)
+      }
+    }
+
+    await request(5)
   }
 }
 

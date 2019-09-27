@@ -23,6 +23,28 @@ class OrderControler extends Controller {
       ctx.body = { status: 'ok', data }
     }
   }
+  
+  // 付款检查通过
+  async payExamineOk() {
+    const { ctx } = this
+    const data = await ctx.service.order.payExamineOk(ctx.request.body)
+    if (data instanceof Error) {
+      ctx.body = { status: 'err', errmsg: data.message }
+    } else {
+      ctx.body = { status: 'ok', data }
+    }
+  }
+  
+  // 付款检查失败
+  async payExamineNo() {
+    const { ctx } = this
+    const data = await ctx.service.order.payExamineNo(ctx.request.body)
+    if (data instanceof Error) {
+      ctx.body = { status: 'err', errmsg: data.message }
+    } else {
+      ctx.body = { status: 'ok', data }
+    }
+  }
 }
 
 module.exports = OrderControler
