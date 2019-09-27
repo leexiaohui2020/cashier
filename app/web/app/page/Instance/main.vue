@@ -1,22 +1,24 @@
 <template>
-  <div class="instance">
-    <Row class="padding-bottom margin-bottom solid-bottom" type="flex" justify="space-between" align="middle">
-      <h1 class="instance-title">实例列表</h1>
-      <div>
-        <Button class="margin-right-xs" size="large" @click="lstInstance">
-          <Icon type="md-sync" size="18" />
-        </Button>
-        <Button type="primary" size="large" @click="createInstance">创建实例</Button>
-      </div>
-    </Row>
+  <lee-layout active="control">
+    <div class="instance">
+      <Row class="padding-bottom margin-bottom solid-bottom" type="flex" justify="space-between" align="middle">
+        <h1 class="instance-title">实例列表</h1>
+        <div>
+          <Button class="margin-right-xs" size="large" @click="lstInstance">
+            <Icon type="md-sync" size="18" />
+          </Button>
+          <Button type="primary" size="large" @click="createInstance">创建实例</Button>
+        </div>
+      </Row>
 
-    <!-- 实例列表 -->
-    <div class="instance-list">
-      <div class="instance-item" v-for="(v, k) of list" :key="k">
-        <InstanceCard :data="v" @on-browser="onBrowserInstance" />
-      </div>
+      <!-- 实例列表 -->
+      <Row :gutter="10">
+        <i-col class="margin-bottom-sm" :span="24" :lg="8" v-for="(v, k) of list" :key="k">
+          <InstanceCard :data="v" @on-browser="onBrowserInstance" />
+        </i-col>
+      </Row>
     </div>
-  </div>
+  </lee-layout>
 </template>
 
 <script>

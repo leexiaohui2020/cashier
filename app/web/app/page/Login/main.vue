@@ -105,7 +105,7 @@ export default {
         account: this.form.account,
         password: this.form.password
       })
-      this.$router.push({ name: 'home' })
+      this.$router.push({ name: 'instance' })
     }
   },
   mounted() {
@@ -122,12 +122,13 @@ export default {
   },
   installRouter(router) {
     const store = router.getStore()
-    const isAuth = store.getters['user/isAuth']
+
     router.regist('login', '/login', this, {
       title: '登录'
     })
 
     router.before((to, from, next) => {
+      const isAuth = store.getters['user/isAuth']
       if (to.meta.auth === true && !isAuth) {
         next({ name: 'login' })
         return true

@@ -1,32 +1,34 @@
 <template>
-  <div class="regist">
-    <div class="regist-modal">
-      <h1 class="regist-title margin-bottom">会员注册</h1>
-      <Form ref="form" :model="form" :rules="rules">
-        <FormItem prop="username">
-          <i-input v-model="form.username" prefix="md-contact" placeholder="请填写用户名" />
-        </FormItem>
-        <FormItem prop="email">
-          <i-input v-model="form.email" prefix="md-mail" placeholder="请填写邮箱" />
-        </FormItem>
-        <FormItem prop="password">
-          <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
-        </FormItem>
-        <FormItem prop="repassword">
-          <i-input v-model="form.repassword" type="password" prefix="md-lock" placeholder="再次确认密码" />
-        </FormItem>
-        <FormItem prop="code">
-          <Row type="flex" align="middle">
-            <div class="flex-sub padding-right-xs">
-              <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
-            </div>
-            <Button @click="getCode" :disabled="codeSendBtnDisabled">{{ codeBufferText }}</Button>
-          </Row>
-        </FormItem>
-        <Button type="primary" :loading="loading" long @click="submit">注册会员</Button>
-      </Form>
+  <lee-layout>
+    <div class="regist">
+      <div class="regist-modal">
+        <h1 class="regist-title margin-bottom">会员注册</h1>
+        <Form ref="form" :model="form" :rules="rules">
+          <FormItem prop="username">
+            <i-input v-model="form.username" prefix="md-contact" placeholder="请填写用户名" />
+          </FormItem>
+          <FormItem prop="email">
+            <i-input v-model="form.email" prefix="md-mail" placeholder="请填写邮箱" />
+          </FormItem>
+          <FormItem prop="password">
+            <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
+          </FormItem>
+          <FormItem prop="repassword">
+            <i-input v-model="form.repassword" type="password" prefix="md-lock" placeholder="再次确认密码" />
+          </FormItem>
+          <FormItem prop="code">
+            <Row type="flex" align="middle">
+              <div class="flex-sub padding-right-xs">
+                <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
+              </div>
+              <Button @click="getCode" :disabled="codeSendBtnDisabled">{{ codeBufferText }}</Button>
+            </Row>
+          </FormItem>
+          <Button type="primary" :loading="loading" long @click="submit">注册会员</Button>
+        </Form>
+      </div>
     </div>
-  </div>
+  </lee-layout>
 </template>
 
 <script>

@@ -40,7 +40,9 @@ export default function createRouter(getStore) {
     router.afterEach((to, from, next) => {
         LoadingBar.finish()
         const { title } = to.meta;
-        if (title && EASY_ENV_IS_BROWSER) document.title = title;
+        if (EASY_ENV_IS_BROWSER) {
+            document.title = [title, '收款助手'].filter(v => v).join(' - ')
+        }
 
         const map = Router.AFTER_MAP.filter(item => {
             if (!item.name) return true;

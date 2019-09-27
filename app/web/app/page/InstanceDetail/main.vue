@@ -1,112 +1,114 @@
 <template>
-  <div class="detail-loading" v-if="loading">
-    <div v-loading="loading"></div>
-  </div>
-  <div class="detail" v-else>
-    <header class="detail-header">
-      <div class="detail-header-caption">
-        <h1 class="title" @click="$router.back()">
-          <Icon type="ios-undo" />
-          <span>实例详情 - {{ detail.name }}</span>
-        </h1>
-        <div class="desc">
-          <span>{{ detail.packName }}</span>
-          <span>{{ detail.callbackEmail }}</span>
-          <span>{{ detail.createdTime | moment }} 创建</span>
-          <span>
-            <Tag size="small" :color="detail.statusMap.color">{{ detail.statusMap.text }}</Tag>
-          </span>
+  <lee-layout>
+    <div class="detail-loading" v-if="loading">
+      <div v-loading="loading"></div>
+    </div>
+    <div class="detail" v-else>
+      <header class="detail-header">
+        <div class="detail-header-caption">
+          <h1 class="title" @click="$router.back()">
+            <Icon type="ios-undo" />
+            <span>实例详情 - {{ detail.name }}</span>
+          </h1>
+          <div class="desc">
+            <span>{{ detail.packName }}</span>
+            <span>{{ detail.callbackEmail }}</span>
+            <span>{{ detail.createdTime | moment }} 创建</span>
+            <span>
+              <Tag size="small" :color="detail.statusMap.color">{{ detail.statusMap.text }}</Tag>
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="padding-top">
-        <Button type="primary" size="large" icon="md-play" :loading="starting" v-if="detail.status === 1" @click="startInstance">运行实例</Button>
-        <Button size="large" icon="md-pause" :loading="pausing" v-if="detail.status === 0" @click="pauseInstance">停止使用</Button>
-        <Button class="margin-left-xs" size="large" icon="md-trash">删除实例</Button>
-      </div>
-    </header>
+        <div class="padding-top">
+          <Button type="primary" size="large" icon="md-play" :loading="starting" v-if="detail.status === 1" @click="startInstance">运行实例</Button>
+          <Button size="large" icon="md-pause" :loading="pausing" v-if="detail.status === 0" @click="pauseInstance">停止使用</Button>
+          <Button class="margin-left-xs" size="large" icon="md-trash">删除实例</Button>
+        </div>
+      </header>
 
-    <Card shadow>
-      <Row type="flex">
-        <div class="flex-sub">
-          <h4 class="text-color-l margin-bottom-xs">今日订单量</h4>
-          <div style="font-weight: 600">
-            <span style="font-size: 40px">{{ detail.countOrder.today }}</span>
-            <span class="text-color-l">条 / {{ detail.limit }} 条</span>
+      <Card shadow>
+        <Row type="flex">
+          <div class="flex-sub">
+            <h4 class="text-color-l margin-bottom-xs">今日订单量</h4>
+            <div style="font-weight: 600">
+              <span style="font-size: 40px">{{ detail.countOrder.today }}</span>
+              <span class="text-color-l">条 / {{ detail.limit }} 条</span>
+            </div>
           </div>
-        </div>
-        <div class="flex-sub">
-          <h4 class="text-color-l margin-bottom-xs">本月订单量</h4>
-          <div style="font-weight: 600">
-            <span style="font-size: 40px">{{ detail.countOrder.tomonth }}</span>
-            <span class="text-color-l">条</span>
+          <div class="flex-sub">
+            <h4 class="text-color-l margin-bottom-xs">本月订单量</h4>
+            <div style="font-weight: 600">
+              <span style="font-size: 40px">{{ detail.countOrder.tomonth }}</span>
+              <span class="text-color-l">条</span>
+            </div>
           </div>
-        </div>
-      </Row>
+        </Row>
 
-      <Row class="margin-top" type="flex">
-        <div class="flex-sub">
-          <div>
-            <span class="text-bold">实例ID：{{ detail.instanceId }}</span>
-            <a href="javascript:;" v-clipboard="detail.instanceId" @success="onCopySuccess">
-              <Icon type="md-copy" />
-            </a>
+        <Row class="margin-top" type="flex">
+          <div class="flex-sub">
+            <div>
+              <span class="text-bold">实例ID：{{ detail.instanceId }}</span>
+              <a href="javascript:;" v-clipboard="detail.instanceId" @success="onCopySuccess">
+                <Icon type="md-copy" />
+              </a>
+            </div>
+            <div>
+              <span class="text-bold">实例秘钥：{{ detail.instanceSecret }}</span>
+              <a href="javascript:;" v-clipboard="detail.instanceSecret" @success="onCopySuccess">
+                <Icon type="md-copy" />
+              </a>
+            </div>
           </div>
-          <div>
-            <span class="text-bold">实例秘钥：{{ detail.instanceSecret }}</span>
-            <a href="javascript:;" v-clipboard="detail.instanceSecret" @success="onCopySuccess">
-              <Icon type="md-copy" />
-            </a>
-          </div>
-        </div>
 
-        <div class="flex-sub" style="position: relative">
-          <div>离到期剩余时间天数：{{ detail.expireDay }}</div>
-          <div class="text-color-l">到期日期：{{ detail.expireTime | moment }}</div>
-          <div style="position: absolute; right:0; top: 0">
-            <a href="javascript:;">升级</a>
-            <a class="margin-left-sm" href="javascript:;">续费</a>
+          <div class="flex-sub" style="position: relative">
+            <div>离到期剩余时间天数：{{ detail.expireDay }}</div>
+            <div class="text-color-l">到期日期：{{ detail.expireTime | moment }}</div>
+            <div style="position: absolute; right:0; top: 0">
+              <a href="javascript:;">升级</a>
+              <a class="margin-left-sm" href="javascript:;">续费</a>
+            </div>
+          </div>
+        </Row>
+      </Card>
+
+      <Card class="margin-top" title="实例设置" shadow>
+        <div class="detail-panel">
+          <div class="label">收款微信</div>
+          <div class="value" :class="`text-${detail.weixinSetting ? 'green' : 'red'}`">{{ detail.weixinSetting ? '已' : '未' }}配置</div>
+          <div class="extra">
+            <a href="javascript:;" @click="setWeixin">{{ detail.weixinSetting ? '修改' : '设置' }}</a>
           </div>
         </div>
-      </Row>
-    </Card>
-
-    <Card class="margin-top" title="实例设置" shadow>
-      <div class="detail-panel">
-        <div class="label">收款微信</div>
-        <div class="value" :class="`text-${detail.weixinSetting ? 'green' : 'red'}`">{{ detail.weixinSetting ? '已' : '未' }}配置</div>
-        <div class="extra">
-          <a href="javascript:;" @click="setWeixin">{{ detail.weixinSetting ? '修改' : '设置' }}</a>
+        <div class="detail-panel">
+          <div class="label">收款支付宝</div>
+          <div class="value" :class="`text-${detail.zhifubaoSetting ? 'green' : 'red'}`">{{ detail.zhifubaoSetting ? '已' : '未' }}配置</div>
+          <div class="extra">
+            <a href="javascript:;" @click="setZhifuBao">{{ detail.zhifubaoSetting ? '修改' : '设置' }}</a>
+          </div>
         </div>
-      </div>
-      <div class="detail-panel">
-        <div class="label">收款支付宝</div>
-        <div class="value" :class="`text-${detail.zhifubaoSetting ? 'green' : 'red'}`">{{ detail.zhifubaoSetting ? '已' : '未' }}配置</div>
-        <div class="extra">
-          <a href="javascript:;" @click="setZhifuBao">{{ detail.zhifubaoSetting ? '修改' : '设置' }}</a>
+        <div class="detail-panel">
+          <div class="label">通知邮箱</div>
+          <div class="value">{{ detail.callbackEmail }}</div>
+          <div class="extra">
+            <a href="javascript:;" @click="changeEmail">更换</a>
+          </div>
         </div>
-      </div>
-      <div class="detail-panel">
-        <div class="label">通知邮箱</div>
-        <div class="value">{{ detail.callbackEmail }}</div>
-        <div class="extra">
-          <a href="javascript:;" @click="changeEmail">更换</a>
+        <div class="detail-panel">
+          <div class="label">回调地址</div>
+          <div class="value">
+            <span v-if="detail.callbackUrl">
+              <span>{{ detail.callbackUrl }}</span>
+              <Tag :color="detail.callbackUrlCanUse ? 'green' : 'orange'">{{ detail.callbackUrlCanUse ? '可访问' : '不可访问' }}</Tag>
+            </span>
+            <span class="text-red" v-else>未配置</span>
+          </div>
+          <div class="extra">
+            <a href="javascript:;" @click="changeCallbackUrl">{{ detail.callbackUrl ? '修改' : '设置' }}</a>
+          </div>
         </div>
-      </div>
-      <div class="detail-panel">
-        <div class="label">回调地址</div>
-        <div class="value">
-          <span v-if="detail.callbackUrl">
-            <span>{{ detail.callbackUrl }}</span>
-            <Tag :color="detail.callbackUrlCanUse ? 'green' : 'orange'">{{ detail.callbackUrlCanUse ? '可访问' : '不可访问' }}</Tag>
-          </span>
-          <span class="text-red" v-else>未配置</span>
-        </div>
-        <div class="extra">
-          <a href="javascript:;" @click="changeCallbackUrl">{{ detail.callbackUrl ? '修改' : '设置' }}</a>
-        </div>
-      </div>
-    </Card>
-  </div>
+      </Card>
+    </div>
+  </lee-layout>
 </template>
 
 <script>

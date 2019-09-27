@@ -3,20 +3,16 @@
 @header-h: 80px;
 
 .detail {
-  padding: @header-h + @margin-df @margin-df @margin-df;
-
+  min-width: 1000px;
   &-header {
-    top: 0;
-    left: 0;
     width: 100%;
     height: @header-h;
     background: @bg-card;
     box-shadow: 0 1px 1px @shadow-color;
-    position: fixed;
     display: flex;
     justify-content: space-between;
-    z-index: @z-index-df;
     padding: 0 @margin-df;
+    margin-bottom: @margin-df;
 
     &-caption {
       display: flex;

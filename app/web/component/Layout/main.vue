@@ -4,9 +4,11 @@
       <header class="layout-header">
         <div class="layout-header-brand"></div>
         <ul class="layout-menu" :class="{ open: menuShow }">
-          <router-link tag="li" class="layout-menu-item" :class="{ active: active === v.id }" v-for="(v, k) of menu" :key="k" :to="v.link">
-            <span>{{ v.title }}</span>
-          </router-link>
+          <template v-for="(v, k) of menu">
+            <router-link tag="li" class="layout-menu-item" :class="{ active: active === v.id }" :key="k" :to="v.link" v-if="!(v.auth && !isAuth)">
+              <span>{{ v.title }}</span>
+            </router-link>
+          </template>
         </ul>
         <div class="layout-header-extra">
           <router-link to="/login" class="icon-btn" v-show="!isAuth">
