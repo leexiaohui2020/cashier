@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     vtitle() {
-      return this.$route.meta.title || this.title
+      return this.$route.meta.title || this.title || '收款助手'
     },
     vkeywords() {
       return this.$route.meta.keywords
