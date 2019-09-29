@@ -7,6 +7,10 @@
     "declarations": true
   },
   "dependencies": {
+    "@better-scroll/core": "^2.0.0-beta.2",
+    "@better-scroll/mouse-wheel": "^2.0.0-beta.2",
+    "@better-scroll/observe-dom": "^2.0.0-beta.2",
+    "@better-scroll/scroll-bar": "^2.0.0-beta.2",
     "axios": "^0.18.1",
     "egg": "^2.15.1",
     "egg-mongoose": "^3.2.0",

@@ -1,5 +1,6 @@
 @import 'vars';
 @import 'mixs';
+@import 'animate';
 @import '~ionicons/dist/css/ionicons.css';
 
 * {
@@ -11,6 +12,24 @@ body {
   color: @text-color;
   background: @bg-body;
   font-size: @text-df;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+}
+
+ul, ol, dl, p,
+h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  font-size: @text-xxl;
+}
+h2 {
+  font-size: @text-xl;
+}
+
+a {
+  text-decoration: none;
 }
 
 .create-margin(margin);

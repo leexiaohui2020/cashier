@@ -1,26 +1,16 @@
 <template>
   <lee-layout>
-    <div class="login">
-      <div class="login-modal">
-        <h1 class="login-title">会员登录</h1>
-        <Form ref="form" :model="form" :rules="rules">
-          <FormItem prop="account">
-            <i-input v-model="form.account" prefix="md-contact" placeholder="请填写用户名/邮箱" />
-          </FormItem>
-          <FormItem prop="password">
-            <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
-          </FormItem>
-          <FormItem prop="code">
-            <Row type="flex" align="middle">
-              <div class="flex-sub padding-right-xs">
-                <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
-              </div>
-              <Button :disabled="sendCodeDisabled" @click="sendCode">{{ codeBufferText }}</Button>
-            </Row>
-          </FormItem>
-          <Button type="primary" long :loading="loading" @click="submit">登录</Button>
-        </Form>
+    <div class="frame">
+      <h2 class="margin-bottom-xl">会员登录</h2>
+      <NInput ref="inputAccount" v-model="form.account" class="margin-bottom-lg" prefix="md-contact" placeholder="请填写帐号/邮箱" />
+      <NInput ref="inputPassword" v-model="form.password" class="margin-bottom-lg" prefix="md-lock" placeholder="请填写登录密码" type="password" />
+      <div class="frame-flex margin-bottom-lg">
+        <div class="flex-sub margin-right-sm">
+          <NInput ref="inputCode" v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
+        </div>
+        <NButton @onclick="sendCode" :disabled="sendCodeDisabled">{{ codeBufferText }}</NButton>
       </div>
+      <NButton type="primary" long @onclick="submit">登录</NButton>
     </div>
   </lee-layout>
 </template>
@@ -28,8 +18,12 @@
 <script>
 import md5 from 'md5'
 import storage from 'common/js/storage'
+import NInput from 'web/ui/Input'
+import NButton from 'web/ui/Button'
+
 export default {
   name: 'PageLogin',
+  components: { NInput, NButton },
   data() {
     return {
       codeBufferTime: 0,
@@ -64,7 +58,7 @@ export default {
       if (this.tm) return
       this.codeBufferTime = 60
       this.tm = setInterval(() => {
-        if (this.tm === 0) {
+        if (this.codeBufferTime === 0) {
           clearInterval(this.tm)
         } else {
           this.codeBufferTime --
@@ -88,9 +82,15 @@ export default {
       this.$Message.success('验证码已发送至您的邮箱')
     },
 
+    async validate() {
+      return this.$refs.inputAccount.assert(v => v, '请填写帐号/邮箱') &&
+        this.$refs.inputPassword.assert(v => v, '请填写密码') &&
+        this.$refs.inputCode.assert(v => v && v.length === 6, '请填写格式正确的验证码')
+    },
+
     async submit() {
       if (this.loading) return
-      if (!await this.$refs.form.validate()) return
+      if (!await this.validate()) return
       let { account, password, code } = this.form
       password = md5(password).toUpperCase()
       this.loading = true
@@ -105,7 +105,7 @@ export default {
         account: this.form.account,
         password: this.form.password
       })
-      this.$router.push({ name: 'instance' })
+      this.$router.push({ name: 'home' })
     }
   },
   mounted() {

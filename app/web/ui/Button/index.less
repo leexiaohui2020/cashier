@@ -1,0 +1,57 @@
+@import '~common/style/vars';
+
+.n-btn {
+  height: @item-height-df;
+  display: inline-block;
+  line-height: @item-height-df;
+  padding: 0 @margin-df;
+  white-space: nowrap;
+  border: none;
+  border-radius: @radius-df;
+  outline: none;
+  cursor: pointer;
+
+  &-type_primary {
+    color: @text-reverse;
+    background: @color-theme;
+
+    &:not(.n-btn-disabled):not(:active):hover {
+      background: lighten(@color-theme, 3%);
+    }
+
+    &.n-btn-loading {
+      background: lighten(@color-theme, 20%);
+      pointer-events: none;
+    }
+  }
+
+  &-type_default {
+    color: @text-color-d;
+    background: @bg-card;
+    border: 1px solid @border-color;
+
+    &:hover {
+      border-color: @border-color-d;
+    }
+    &:active {
+      color: inherit;
+    }
+  }
+
+  &-long {
+    width: 100%;
+    display: block;
+  }
+
+  &.n-btn-disabled {
+    cursor: not-allowed;
+    border: 1px solid @border-color;
+    color: @text-color-l;
+    background: #FBFBFB;
+    pointer-events: none;
+  }
+
+  &-prefix {
+    margin-right: @margin-xs;
+  }
+}

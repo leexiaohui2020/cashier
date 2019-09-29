@@ -1,0 +1,28 @@
+@import '~common/style/vars';
+
+.n-msg {
+  top: 0;
+  left: 0;
+  position: fixed;
+  padding: @margin-df;
+  background: @bg-card;
+  z-index: @z-index-lg;
+  border: 1px solid @border-color-d;
+  border-radius: @radius-sm;
+
+  &-status_success {
+    border-color: @color-green;
+
+    .icon {
+      color: @color-green;
+    }
+  }
+  
+  &-status_error {
+    border-color: @color-red;
+
+    .icon {
+      color: @color-red;
+    }
+  }
+}

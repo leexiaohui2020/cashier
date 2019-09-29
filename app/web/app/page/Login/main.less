@@ -1,24 +1,15 @@
 @import '~common/style/vars';
-@modal-width: 320px;
 
-.login {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 100px;
+.frame {
+  @width: 300px;
+  top: 50%;
+  left: 50%;
+  width: @width;
+  position: absolute;
+  transform: translate(-50%, -50%);
 
-  &-modal {
-    width: @modal-width;
-    padding: @margin-lg @margin-sm;
-    background: @bg-card;
-    box-shadow: 0 1px 1px @shadow-color;
-    border-radius: @radius-df;
-  }
-
-  &-title {
-    font-size: @text-xl;
-    margin-bottom: @margin-lg;
+  &-flex {
+    display: flex;
+    align-items: center;
   }
 }

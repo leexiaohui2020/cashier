@@ -32,7 +32,7 @@ module.exports = app => ({
   },
 
   siteFile: {
-    '/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/common/asset/favicon.ico'))
+    '/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/common/asset/image/favicon.ico'))
   },
 
   mongoose: {

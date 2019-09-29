@@ -1,0 +1,23 @@
+@import '~common/style/vars';
+
+.logo {
+  @h: 40px;
+  height: @h;
+  display: flex;
+  align-items: center;
+
+  &-icon {
+    width: @h;
+    height: @h;
+    position: relative;
+    padding: @margin-xs;
+    img {
+      width: 100%;
+    }
+  }
+
+  &-name {
+    font-size: @text-xl;
+    font-weight: 600;
+  }
+}

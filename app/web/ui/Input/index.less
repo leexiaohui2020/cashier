@@ -1,0 +1,53 @@
+@import '~common/style/vars';
+
+.n-input {
+  height: @item-height-df;
+  position: relative;
+
+  &-control {
+    width: 100%;
+    height: @item-height-df;
+    background: @bg-card;
+    border: 1px solid @border-color;
+    border-radius: @radius-sm;
+    outline: none;
+    padding: @margin-sm;
+
+    &:focus {
+      border-color: @border-color-d;
+    }
+
+    &::-webkit-input-placeholder {
+      color: @text-color-l;
+    }
+  }
+
+  &-prefix {
+    top: 0;
+    left: 0;
+    width: @item-height-df;
+    height: @item-height-df;
+    position: absolute;
+    text-align: center;
+    line-height: @item-height-df;
+    color: @text-color-l;
+
+    & + .n-input-control {
+      padding-left: @item-height-df;
+    }
+  }
+
+  &-status_error > &-prefix {
+    color: @color-red;
+  }
+  &-status_error > &-control {
+    border-color: @color-red;
+  }
+  
+  &-status_success > &-prefix {
+    color: @color-green;
+  }
+  &-status_success > &-control {
+    border-color: @color-green;
+  }
+}

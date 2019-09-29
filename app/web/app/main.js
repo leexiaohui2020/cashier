@@ -7,14 +7,13 @@ import VueLazyLoad from 'vue-lazyload'
 import Loading from './utils/loading'
 import Dialog from './utils/dialog'
 import Validate from './utils/validate'
-import iView from 'iview'
 import VueClipboards from 'vue-clipboards'
 import * as api from './api/main'
 import 'web/component'
 import 'common/style/base.less'
 import './main.less'
+import Message from 'web/ui/Message'
 
-Vue.use(iView)
 Vue.use(Loading)
 Vue.use(VueLazyLoad)
 Vue.use(Dialog)
@@ -22,6 +21,7 @@ Vue.use(VueClipboards)
 Vue.use(Validate)
 
 Vue.prototype.$api = api
+Vue.prototype.$Message = Message
 
 Vue.filter('image', filename => `http://127.0.0.1:18081/image/${filename}`)
 
