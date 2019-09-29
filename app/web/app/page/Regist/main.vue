@@ -1,40 +1,61 @@
 <template>
   <lee-layout>
-    <div class="regist">
-      <div class="regist-modal">
-        <h1 class="regist-title margin-bottom">会员注册</h1>
-        <Form ref="form" :model="form" :rules="rules">
-          <FormItem prop="username">
-            <i-input v-model="form.username" prefix="md-contact" placeholder="请填写用户名" />
-          </FormItem>
-          <FormItem prop="email">
-            <i-input v-model="form.email" prefix="md-mail" placeholder="请填写邮箱" />
-          </FormItem>
-          <FormItem prop="password">
-            <i-input v-model="form.password" type="password" prefix="md-lock" placeholder="请填写密码" />
-          </FormItem>
-          <FormItem prop="repassword">
-            <i-input v-model="form.repassword" type="password" prefix="md-lock" placeholder="再次确认密码" />
-          </FormItem>
-          <FormItem prop="code">
-            <Row type="flex" align="middle">
-              <div class="flex-sub padding-right-xs">
-                <i-input v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
-              </div>
-              <Button @click="getCode" :disabled="codeSendBtnDisabled">{{ codeBufferText }}</Button>
-            </Row>
-          </FormItem>
-          <Button type="primary" :loading="loading" long @click="submit">注册会员</Button>
-        </Form>
+    <div class="frame">
+      <h2 class="margin-bottom-xl">会员注册</h2>
+      <NInput
+        ref="inputEmail"
+        class="margin-bottom-lg"
+        prefix="md-mail"
+        v-model="form.email"
+        placeholder="请填写邮箱"
+      />
+
+      <NInput
+        ref="inputUserName"
+        class="margin-bottom-lg"
+        prefix="md-contact"
+        v-model="form.username"
+        placeholder="请填写用户名"
+      />
+
+      <NInput
+        ref="inputPassword"
+        type="password"
+        class="margin-bottom-lg"
+        prefix="md-lock"
+        v-model="form.password"
+        placeholder="请填写登录密码"
+      />
+      
+      <NInput
+        ref="inputRePassword"
+        type="password"
+        class="margin-bottom-lg"
+        prefix="md-lock"
+        v-model="form.repassword"
+        placeholder="请再次确认密码"
+      />
+
+      <div class="frame-flex margin-bottom-lg">
+        <div class="flex-sub margin-right-sm">
+          <NInput ref="inputCode" v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
+        </div>
+        <NButton @onclick="getCode" :disabled="codeSendBtnDisabled">{{ codeBufferText }}</NButton>
       </div>
+
+      <NButton type="primary" :loading="loading" long @onclick="submit">完成注册</NButton>
     </div>
   </lee-layout>
 </template>
 
 <script>
 import md5 from 'md5'
+import NInput from 'web/ui/Input'
+import NButton from 'web/ui/Button'
+
 export default {
   name: 'PageRegist',
+  components: { NInput, NButton },
   data() {
     return {
       codeBufferTime: 0,
@@ -44,52 +65,6 @@ export default {
         password: '',
         repassword: '',
         code: ''
-      },
-      rules: {
-        email: [
-          { required: true, message: '请填写邮箱' },
-          { type: 'email', message: '请填写格式正确的邮箱' }
-        ],
-        username: [
-          { required: true, message: '请填写用户名' },
-          {
-            validator: (rule, value, callback) => {
-              if (this.$validate.validAccount(value)) {
-                callback()
-              } else {
-                callback(new Error('用户名长度至少六位，且只能填写字母数字和下划线，开头必须是字母'))
-              }
-            }
-          }
-        ],
-        password: [
-          { required: true, message: '请填写密码' },
-          {
-            validator: (rule, value, callback) => {
-              if (this.$validate.validAccount(value)) {
-                callback()
-              } else {
-                callback(new Error('密码长度至少六位，且只能填写字母数字和下划线，开头必须是字母'))
-              }
-            }
-          }
-        ],
-        repassword: [
-          { required: true, message: '请填写确认密码' },
-          {
-            validator: (rule, value, callback) => {
-              if (this.form.password === value) {
-                callback()
-              } else {
-                callback(new Error('确认密码不一致'))
-              }
-            }
-          }
-        ],
-        code: [
-          { required: true, message: '请填写验证码' },
-          { min: 6, max: 6, message: '验证码格式错误' }
-        ]
       },
       loading: false
     }
@@ -105,6 +80,14 @@ export default {
     }
   },
   methods: {
+
+    validate() {
+      return this.$refs.inputEmail.assert(this.$validate.isEmail, '请填写格式正确的邮箱') &&
+        this.$refs.inputUserName.assert(this.$validate.validAccount, '用户名长度至少六位，且只能填写字母数字和下划线，开头必须是字母') &&
+        this.$refs.inputPassword.assert(this.$validate.validAccount, '密码长度至少六位，且只能填写字母数字和下划线，开头必须是字母') &&
+        this.$refs.inputRePassword.assert(v => v && v === this.form.password, '两次密码输入不一致') &&
+        this.$refs.inputCode.assert(v => v && v.length === 6, '请填写格式正确的验证码')
+    },
 
     startCodeBuffer() {
       if (this.tm) return
@@ -138,9 +121,8 @@ export default {
     },
 
     async submit() {
-      console.info(!await this.$refs.form.validate())
       if (this.loading) return
-      if (!await this.$refs.form.validate()) return
+      if (!await this.validate()) return
       let { email, username, password, code } = this.form
       password = md5(password).toUpperCase()
       this.loading = true
@@ -155,6 +137,7 @@ export default {
         return this.$Message.error(data.errmsg)
       }
       this.$Message.success('注册成功')
+      this.$router.push({ 'name': 'login' })
     }
   },
   destroyed() {

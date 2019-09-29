@@ -24,7 +24,7 @@ class UserService extends Service {
       return new Error('参数错误')
     }
 
-    if (ctx.session.code !== code) {
+    if (ctx.session.code !== code || ctx.session.codeEmail !== email) {
       return new Error('验证码错误')
     }
 
@@ -74,9 +74,6 @@ class UserService extends Service {
       return new Error('参数错误')
     }
 
-    if (ctx.session.code !== code) {
-      return new Error('验证码错误')
-    }
 
     const user = await model.User.findOne({}).or([
       { username: account },
@@ -87,6 +84,9 @@ class UserService extends Service {
     }
     if (user.password !== password) {
       return new Error('密码错误')
+    }
+    if (ctx.session.code !== code || ctx.session.codeEmail !== user.email) {
+      return new Error('验证码错误')
     }
 
     const uid = user._id
@@ -123,6 +123,7 @@ class UserService extends Service {
 
     const code = String(Math.random()).substr(2, 6)
     ctx.session.code = code
+    ctx.session.codeEmail = email
     await sendMail(email, '[易收银] 请查收您的验证码', 'validcode', {
       code,
       email,

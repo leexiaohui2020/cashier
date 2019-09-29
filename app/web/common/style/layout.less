@@ -1,0 +1,26 @@
+@import 'vars';
+
+.auto-flex {
+  display: flex;
+  flex-direction: row;
+
+  &-sub {
+    flex: 1;
+  }
+  &-twice {
+    flex: 2;
+  }
+  &-thrible {
+    flex: 3;
+  }
+}
+
+@media screen and (max-width: @screen-mobile) {
+  .auto-flex {
+    flex-direction: column;
+
+    &-sub, &-twice, &-thrible {
+      flex: 1;
+    }
+  }
+}

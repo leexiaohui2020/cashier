@@ -1,5 +1,6 @@
 <template>
-  <LeeLayout active="home"></LeeLayout>
+  <LeeLayout active="home">
+  </LeeLayout>
 </template>
 
 <script>

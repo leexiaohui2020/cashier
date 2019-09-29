@@ -37,7 +37,7 @@ class InstanceService extends Service {
     ) {
       return new Error('参数错误')
     }
-    if (ctx.session.code !== code) {
+    if (ctx.session.code !== code || ctx.session.codeEmail !== callbackEmail) {
       return new Error('验证码错误')
     }
     if (!validate.isEmail(callbackEmail)) {
@@ -276,7 +276,7 @@ class InstanceService extends Service {
       return new Error('请登录')
     }
 
-    if (code !== ctx.session.code) {
+    if (code !== ctx.session.code|| ctx.session.codeEmail !== email) {
       return new Error('验证码错误')
     }
 

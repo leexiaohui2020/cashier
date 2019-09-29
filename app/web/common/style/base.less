@@ -1,5 +1,6 @@
 @import 'vars';
 @import 'mixs';
+@import 'layout';
 @import 'animate';
 @import '~ionicons/dist/css/ionicons.css';
 
@@ -60,3 +61,11 @@ a {
 .flex-trible { flex: 3 }
 
 .text-bold { font-weight: 600 }
+
+.fl { float: left }
+.fr { float: right }
+.fc::after {
+  content: '';
+  display: block;
+  clear: both;
+}

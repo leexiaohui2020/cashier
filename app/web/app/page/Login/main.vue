@@ -2,15 +2,32 @@
   <lee-layout>
     <div class="frame">
       <h2 class="margin-bottom-xl">会员登录</h2>
-      <NInput ref="inputAccount" v-model="form.account" class="margin-bottom-lg" prefix="md-contact" placeholder="请填写帐号/邮箱" />
-      <NInput ref="inputPassword" v-model="form.password" class="margin-bottom-lg" prefix="md-lock" placeholder="请填写登录密码" type="password" />
+
+      <NInput
+        ref="inputAccount"
+        class="margin-bottom-lg"
+        prefix="md-contact"
+        v-model="form.account"
+        placeholder="请填写帐号/邮箱"
+      />
+
+      <NInput
+        ref="inputPassword"
+        type="password"
+        class="margin-bottom-lg"
+        prefix="md-lock"
+        v-model="form.password"
+        placeholder="请填写登录密码"
+      />
+
       <div class="frame-flex margin-bottom-lg">
         <div class="flex-sub margin-right-sm">
           <NInput ref="inputCode" v-model="form.code" prefix="md-key" placeholder="请填写验证码" />
         </div>
         <NButton @onclick="sendCode" :disabled="sendCodeDisabled">{{ codeBufferText }}</NButton>
       </div>
-      <NButton type="primary" long @onclick="submit">登录</NButton>
+
+      <NButton type="primary" :loading="loading" long @onclick="submit">登录</NButton>
     </div>
   </lee-layout>
 </template>
@@ -31,14 +48,6 @@ export default {
         account: '',
         password: '',
         code: ''
-      },
-      rules: {
-        account: [{ required: true, message: '请填写用户名/邮箱' }],
-        password: [{ required: true, message: '请填写密码' }],
-        code: [
-          { required: true, message: '请填写验证码'},
-          { min: 6, max: 6, message: '验证码格式错误' }
-        ]
       },
       loading: false
     }

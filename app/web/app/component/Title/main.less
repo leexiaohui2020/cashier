@@ -1,0 +1,21 @@
+@import '~common/style/vars';
+
+.caption {
+  height: @item-height-df;
+  line-height: @item-height-df;
+  font-size: @text-xl;
+  font-weight: 600;
+  color: @text-color-d;
+  padding-left: @margin-lg;
+  position: relative;
+
+  &::before {
+    top: 20%;
+    left: 0;
+    width: 6px;
+    height: 60%;
+    content: '';
+    background: @color-theme;
+    position: absolute;
+  }
+}

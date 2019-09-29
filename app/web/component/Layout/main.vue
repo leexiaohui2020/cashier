@@ -21,7 +21,11 @@
             <UIcon type="md-create" />
             <span>注册</span>
           </router-link>
-
+          
+          <a href="javascript:;" class="icon-btn" v-show="isAuth" @click="logout">
+            <UIcon type="md-log-out" />
+            <span>退出登录</span>
+          </a>
           <a href="javascript:;" class="icon-btn hide-pc" @click="menuShow = !menuShow">
             <UIcon :type="`md-${menuShow ? 'close' : 'menu'}`" />
           </a>

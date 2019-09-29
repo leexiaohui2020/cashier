@@ -1,22 +1,13 @@
 <template>
   <lee-layout active="control">
-    <div class="instance">
-      <Row class="padding-bottom margin-bottom solid-bottom" type="flex" justify="space-between" align="middle">
-        <h1 class="instance-title">实例列表</h1>
-        <div>
-          <Button class="margin-right-xs" size="large" @click="lstInstance">
-            <Icon type="md-sync" size="18" />
-          </Button>
-          <Button type="primary" size="large" @click="createInstance">创建实例</Button>
-        </div>
-      </Row>
-
-      <!-- 实例列表 -->
-      <Row :gutter="10">
-        <i-col class="margin-bottom-sm" :span="24" :lg="8" v-for="(v, k) of list" :key="k">
-          <InstanceCard :data="v" @on-browser="onBrowserInstance" />
-        </i-col>
-      </Row>
+    <div class="auto-flex">
+      <div class="auto-flex-twice padding-xs">
+        <LeeTitle>应用控制台</LeeTitle>
+        <InstanceCard v-for="(v, k) of list" :key="k" :data="v" />
+      </div>
+      <div class="auto-flex-sub padding-xs">
+        <LeeTitle>快捷导航</LeeTitle>
+      </div>
     </div>
   </lee-layout>
 </template>
@@ -25,12 +16,11 @@
 import InstanceCard from 'app/component/InstanceCard/main'
 import CreateInstance from 'app/component/CreateInstance/main'
 import { mapState } from 'vuex'
+import LeeTitle from 'app/component/Title/main'
 
 export default {
   name: 'PageInstance',
-  components: {
-    InstanceCard,
-  },
+  components: { LeeTitle, InstanceCard },
   data() {
     return {
       page: 1,
@@ -95,11 +85,6 @@ export default {
   },
   async mounted() {
     await this.lstInstance()
-  },
-  watch: {
-    loading(flag) {
-      this.$Loading[flag ? 'start' : 'finish']()
-    }
   },
   installRouter(router) {
     router.regist('instance', '/instance', this, {

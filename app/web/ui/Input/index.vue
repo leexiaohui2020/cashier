@@ -3,7 +3,7 @@
     <div class="n-input-prefix" v-if="prefix">
       <NIcon :type="prefix" />
     </div>
-    <input v-model="content" :type="type" :placeholder="placeholder" class="n-input-control">
+    <input ref="input" v-model="content" :type="type" :placeholder="placeholder" class="n-input-control">
   </div>
 </template>
 
@@ -38,6 +38,7 @@ export default {
         return true
       }
       this.status = 'error'
+      this.$refs.input.focus()
       NMessage.error(message)
       return false
     }
