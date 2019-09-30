@@ -1,12 +1,10 @@
 <template>
   <lee-layout active="control">
-    <div class="auto-flex">
-      <div class="auto-flex-twice padding-xs">
-        <LeeTitle>应用控制台</LeeTitle>
+    <div class="frame">
+      <div class="frame-side"></div>
+      <div class="frame-side">
+        <LeeTitle icon="md-apps">应用列表</LeeTitle>
         <InstanceCard v-for="(v, k) of list" :key="k" :data="v" />
-      </div>
-      <div class="auto-flex-sub padding-xs">
-        <LeeTitle>快捷导航</LeeTitle>
       </div>
     </div>
   </lee-layout>

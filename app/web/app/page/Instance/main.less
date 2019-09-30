@@ -1,0 +1,21 @@
+@import '~common/style/vars';
+
+.frame {
+  display: flex;
+
+  &-side {
+    flex: 1;
+  }
+}
+
+@media screen and (max-width: @screen-mobile) {
+  .frame {
+    flex-direction: column;
+  }
+}
+
+@media screen and (min-width: @screen-pc) {
+  .frame-side:last-child {
+    max-width: 400px;
+  }
+}

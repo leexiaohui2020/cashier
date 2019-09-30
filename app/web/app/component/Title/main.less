@@ -3,19 +3,19 @@
 .caption {
   height: @item-height-df;
   line-height: @item-height-df;
-  font-size: @text-xl;
+  font-size: @text-df;
   font-weight: 600;
   color: @text-color-d;
-  padding-left: @margin-lg;
+  background: @bg-card;
+  padding: 0 @margin-sm;
+  box-shadow: 0 0 1px @shadow-color-l;
   position: relative;
 
-  &::before {
-    top: 20%;
-    left: 0;
-    width: 6px;
-    height: 60%;
-    content: '';
-    background: @color-theme;
-    position: absolute;
+  &-prefix {
+    float: left;
+    height: @item-height-df;
+    line-height: @item-height-df;
+    text-align: center;
+    margin-right: @margin-sm;
   }
 }

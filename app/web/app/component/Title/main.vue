@@ -1,10 +1,21 @@
 <template>
-  <div class="caption"><slot /></div>
+  <div class="caption">
+    <div class="caption-prefix" v-if="icon">
+      <NIcon :type="icon" :color="color" />
+    </div>
+    <slot />
+  </div>
 </template>
 
 <script>
+import NIcon from 'web/ui/Icon'
 export default {
-  name: 'LeeTitle'
+  name: 'LeeTitle',
+  components: { NIcon },
+  props: {
+    icon: String,
+    iconColor: String
+  }
 }
 </script>
 
