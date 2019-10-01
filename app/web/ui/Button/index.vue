@@ -27,7 +27,8 @@ export default {
     loading: {
       type: Boolean,
       default: false
-    }
+    },
+    size: String
   },
   computed: {
     btnClass() {
@@ -36,6 +37,7 @@ export default {
       if (this.long) list.push('n-btn-long')
       if (this.disabled) list.push('n-btn-disabled')
       if (this.loading) list.push('n-btn-loading')
+      if (this.size) list.push(`n-btn-size_${this.size}`)
       return list
     },
 

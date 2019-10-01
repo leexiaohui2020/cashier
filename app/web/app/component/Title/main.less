@@ -1,21 +1,29 @@
 @import '~common/style/vars';
 
 .caption {
-  height: @item-height-df;
-  line-height: @item-height-df;
+  @h: 46px;
+  height: @h;
+  line-height: @h;
   font-size: @text-df;
   font-weight: 600;
   color: @text-color-d;
   background: @bg-card;
   padding: 0 @margin-sm;
-  box-shadow: 0 0 1px @shadow-color-l;
   position: relative;
+  border: 1px solid @border-color;
 
   &-prefix {
     float: left;
-    height: @item-height-df;
-    line-height: @item-height-df;
+    height: @h;
+    line-height: @h;
     text-align: center;
     margin-right: @margin-sm;
+  }
+
+  &-extra {
+    float: right;
+    height: @h;
+    display: flex;
+    align-items: center;
   }
 }

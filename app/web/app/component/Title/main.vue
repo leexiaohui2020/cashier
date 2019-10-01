@@ -1,9 +1,12 @@
 <template>
   <div class="caption">
     <div class="caption-prefix" v-if="icon">
-      <NIcon :type="icon" :color="color" />
+      <NIcon :type="icon" :color="iconColor" />
     </div>
     <slot />
+    <div class="caption-extra">
+      <slot name="extra" />
+    </div>
   </div>
 </template>
 

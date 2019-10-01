@@ -41,7 +41,7 @@ exports.sendMail = (() => {
   })
 
   return async (to, subject, file, data = {}) => {
-    const content = fs.readFileSync(path.join(__dirname, `../view/mail/${file}.ejs`), 'utf-8')
+    const content = fs.readFileSync(path.join(__dirname, `asset/ejs/${file}.ejs`), 'utf-8')
     await transporter.sendMail({
       from: '易收银 <lixiaohui2019@sina.cn>',
       to,

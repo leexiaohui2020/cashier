@@ -1,32 +1,99 @@
 @import '~common/style/vars';
 
-.card {
-  padding: @margin-df @margin-xl;
-  background: @bg-card;
-  box-shadow: 0 1px 1px @shadow-color;
-  border-top: 8px solid @color-black;
-
-  &:hover {
-    border-color: @color-theme;
-  }
-
-  &-content {
-    min-height: 80px;
-  }
-}
-
 .instance {
-
   padding: @margin-sm;
   background: @bg-card;
-  box-shadow: 0 1px 1px @shadow-color;
-  border-top: 8px solid @color-black;
+  border: 1px solid @border-color;
 
-  &:hover {
-    border-color: @color-theme;
+  @header-h: 30px;
+  &-header {
+    display: flex;
+    height: @header-h;
+    align-items: center;
   }
 
-  &-control {
-    float: right;
+  &-title {
+    line-height: @header-h;
+  }
+
+  &-extra {
+    flex: 1;
+    height: @header-h;
+    text-align: right;
+  }
+
+  &-btn {
+    width: @header-h;
+    height: @header-h;
+    line-height: @header-h;
+    text-align: center;
+    display: inline-block;
+    font-size: @text-lg;
+    color: @text-color-d;
+  }
+
+  &-desc {
+    margin-top: @margin-xs;
+    text-align: justify;
+    color: @text-color-l;
+    font-size: @text-sm;
+  }
+
+  &-cup:not(:first-child)::before {
+    content: '|';
+    margin: 0 @margin-xs;
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-dropdown {
+    @w: 120px;
+    width: @w;
+    padding: @margin-xs 0;
+    color: @text-color-d;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      height: @item-height-df;
+      color: inherit;
+
+      .icon {
+        width: @item-height-df;
+        text-align: center;
+      }
+      
+      span {
+        font-size: @text-sm;
+      }
+      &:hover {
+        background: @shadow-color-l;
+      }
+    }
+  }
+
+  &-status {
+    @h: 20px;
+    height: @h;
+    padding: 0 @margin-sm;
+    font-size: @text-sm;
+    border-radius: @radius-sm;
+    margin: 0 @margin-sm;
+    border: 1px solid transparent;
+
+    &.success {
+      color: @text-reverse;
+      border-color: @color-green;
+      background: @color-green;
+    }
+    
+    &.error {
+      color: @text-reverse;
+      border-color: @color-red;
+      background: @color-red;
+    }
   }
 }

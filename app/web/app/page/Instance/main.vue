@@ -3,8 +3,11 @@
     <div class="frame">
       <div class="frame-side"></div>
       <div class="frame-side">
-        <LeeTitle icon="md-apps">应用列表</LeeTitle>
-        <InstanceCard v-for="(v, k) of list" :key="k" :data="v" />
+        <LeeTitle class="hide-border-bottom" icon="md-apps">
+          <span>应用列表</span>
+          <NButton type="primary" size="small" slot="extra">创建应用</NButton>
+        </LeeTitle>
+        <InstanceCard class="hide-border-bottom" v-for="(v, k) of list" :key="k" :data="v" @on-browser="onBrowserInstance" />
       </div>
     </div>
   </lee-layout>
@@ -15,10 +18,11 @@ import InstanceCard from 'app/component/InstanceCard/main'
 import CreateInstance from 'app/component/CreateInstance/main'
 import { mapState } from 'vuex'
 import LeeTitle from 'app/component/Title/main'
+import NButton from 'web/ui/Button'
 
 export default {
   name: 'PageInstance',
-  components: { LeeTitle, InstanceCard },
+  components: { LeeTitle, InstanceCard, NButton },
   data() {
     return {
       page: 1,

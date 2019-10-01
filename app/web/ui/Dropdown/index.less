@@ -1,0 +1,57 @@
+@import '~common/style/vars';
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+
+  &-toggle {
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover {
+      background: @shadow-color-l;
+    }
+    &:active, &.active {
+      background: @shadow-color;
+    }
+  }
+
+  &-modal {
+    background: @bg-card;
+    box-shadow: 0 0 2px 1px @shadow-color;
+    transition: all .382s;
+    position: relative;
+  }
+}
+
+@media screen and (min-width: @screen-pc) {
+  .dropdown {
+    &-cover {
+      position: absolute;
+      z-index: @z-index-df;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-mobile) {
+  .dropdown {
+    &-cover {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      background: @shadow-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  
+  .dropdown-enter-active {
+    animation: zoomIn .5s;
+  }
+  .dropdown-leave-active {
+    animation: zoomIn .5s reverse;
+  }
+}

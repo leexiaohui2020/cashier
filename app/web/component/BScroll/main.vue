@@ -41,7 +41,8 @@ export default {
           invert: false,
           easeTime: 300
         },
-        observeDom: true
+        observeDom: true,
+        click: true
       }
     }
   },

@@ -19,6 +19,7 @@ export default {
       const style = {}
       this.size && (style.fontSize = this.size)
       this.color && (style.color = this.color)
+      style.marginTop = '4px'
       return style
     }
   }

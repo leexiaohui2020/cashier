@@ -1,31 +1,49 @@
 <template>
   <div class="instance">
-    <div class="instance-caption">
-      <div class="instance-control">
-        <a href="javascript:;" @click.stop="onBrowser">详情</a>
-        <a class="margin-left-xs" href="javascript:;">停止</a>
-      </div>
-      <div class="instance-info">
-        <h2>{{ data.name }}</h2>
-        <p class="margin-top-xs">{{ data.expireText }} / {{ data.limitText }}</p>
-        <p class="margin-top-xs" v-if="data.description">{{ data.description }}</p>
+    <div class="instance-header">
+      <h4 class="instance-title">{{ data.name }}</h4>
+      <div class="instance-status" :class="data.statusColor">{{ data.statusText }}</div>
+      <div class="instance-extra">
+        <NDropdown ref="dropdown">
+          <a href="javascript:;" class="instance-btn" slot="toggle">
+            <NIcon type="md-more" />
+          </a>
+          <div class="instance-dropdown">
+            <a href="javascript:;" class="instance-dropdown-item" @click="onBrowser">
+              <NIcon class="icon" type="md-open" />
+              <span>详情</span>
+            </a>
+            <a href="javascript:;" class="instance-dropdown-item">
+              <NIcon class="icon" type="md-pause" />
+              <span>暂停</span>
+            </a>
+            <a href="javascript:;" class="instance-dropdown-item">
+              <NIcon class="icon" type="md-power" />
+              <span>注销</span>
+            </a>
+          </div>
+        </NDropdown>
       </div>
     </div>
 
-    <div class="fc margin-top-xl">
-      <div class="fl">
-        <Tag type="dot" :color="data.statusColor">{{ data.statusText }}</Tag>
-      </div>
-      <div class="fr">
-        <span>{{ data.callbackEmail }}</span>
-      </div>
+    <div class="instance-desc">{{ data.description }}</div>
+    <div class="instance-desc">
+      <span class="instance-cup">{{ data.limitText }}</span>
+      <span class="instance-cup">{{ data.expireText }}</span>
+    </div>
+    <div class="instance-desc instance-footer">
+      <span>{{ data.callbackEmail }}</span>
+      <span>{{ data.createdTime }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import NIcon from 'web/ui/Icon'
+import NDropdown from 'web/ui/Dropdown'
 export default {
   name: 'LeeInstanceCard',
+  components: { NIcon, NDropdown },
   props: {
     data: {
       type: Object,
@@ -35,6 +53,7 @@ export default {
   methods: {
     async onBrowser() {
       this.$emit('on-browser', this.data)
+      this.$refs.dropdown.hideModal()
     }
   }
 }
